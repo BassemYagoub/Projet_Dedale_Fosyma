@@ -19,7 +19,7 @@ public class ExploreCommunicationAgent extends AbstractDedaleAgent{
 		List<Behaviour> behaviours = new ArrayList<Behaviour>();
 		
 		behaviours.add(new ExploSoloBehaviour(this, this.myMap));
-		behaviours.add(new MessagingBehaviour(this, this.myMap));
+		//behaviours.add(new MessagingBehaviour(this, this.myMap));
 		addBehaviour(new startMyBehaviours(this, behaviours));
 		
 		System.out.println("the  agent "+this.getLocalName()+ " is started");

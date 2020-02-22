@@ -1,1 +1,1 @@
-http://ppti-14-408-17.ufr-info-p6.jussieu.fr:7778/acc
+http://ppti-14-407-04.ufr-info-p6.jussieu.fr:7778/acc

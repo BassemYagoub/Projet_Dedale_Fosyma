@@ -9,6 +9,7 @@ import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyCollectorAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyMovingAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyTankerAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyWumpusShift;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreMultiAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
 import eu.su.mas.dedale.mas.agents.GateKeeperAgent;
 
@@ -32,7 +33,7 @@ import jade.wrapper.AgentContainer;
  * <li> set the ConfigurationFile parameters (and maybe update the files in resources/) {@link ConfigurationFile}</li>
  * <li> create your agents classes and call them in the createAgents method below </li>
  * </ul>
- * @author h
+ * @author hc
  *
  */
 public class Principal {
@@ -378,7 +379,7 @@ public class Principal {
 		/*********
 		 * AGENT Explo1
 		 *********/
-		//1) Get the container where the agent will appear
+//		//1) Get the container where the agent will appear
 		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER2_NAME);
 		Assert.assertNotNull("This container does not exist",c);
 		
@@ -386,10 +387,10 @@ public class Principal {
 		agentName="Explo1";
 		
 		//3) If you want to give specific parameters to your agent, add them here
-		Object [] entityParametersExplo1={"My parameters"};
+		Object [] entityParametersExplo1={"Explo2"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		ag=createNewDedaleAgent(c, agentName, ExploreSoloAgent.class.getName(), entityParametersExplo1);//
+		ag=createNewDedaleAgent(c, agentName, ExploreMultiAgent.class.getName(), entityParametersExplo1);//
 		agentList.add(ag);
 		
 		/*********
@@ -403,13 +404,13 @@ public class Principal {
 		agentName="Explo2";
 		
 		//3) If you want to give specific parameters to your agent, add them here
-		Object [] entityParametersExplo2={"My parameters"};
+		Object [] entityParametersExplo2={"Explo1"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		ag=createNewDedaleAgent(c, agentName, ExploreSoloAgent.class.getName(), entityParametersExplo2);//DummyMovingAgent
+		ag=createNewDedaleAgent(c, agentName, ExploreMultiAgent.class.getName(), entityParametersExplo2);//ExploreSoloAgent
 		
 		agentList.add(ag);
-		
+//		
 		
 		/*********
 		 * GOLEM
@@ -428,9 +429,9 @@ public class Principal {
 //		ag=createNewDedaleAgent(c, agentName, DummyWumpusShift.class.getName(), entityParameters);
 //		agentList.add(ag);	
 		
-		/*********
-		 * AGENT Explo1
-		 *********/
+//		/*********
+//		 * AGENT Explo1
+//		 *********/
 //		//1) Get the container where the agent will appear
 //		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER2_NAME);
 //		Assert.assertNotNull("This container does not exist",c);
@@ -445,7 +446,7 @@ public class Principal {
 //		//ag=createNewDedaleAgent(c, agentName, DummyMovingAgent.class.getName(), entityParameters1);
 //		ag=createNewDedaleAgent(c, agentName, ExploreSoloAgent.class.getName(), entityParameters1);
 //		agentList.add(ag);
-		
+//		
 //		/*********
 //		 * AGENT Explo2
 //		 *********/
