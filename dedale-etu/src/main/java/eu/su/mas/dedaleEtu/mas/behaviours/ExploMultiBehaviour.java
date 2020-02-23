@@ -38,7 +38,8 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 	public void action() {
 		if(this.informations.myMap==null)
 			this.informations.myMap= new MapRepresentation();
-		
+		System.out.println(this.informations.getClosedNodes().size());
+
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
 		if (myPosition!=null){
@@ -68,16 +69,18 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 					if (!this.informations.openNodes.contains(nodeId)){
 						this.informations.openNodes.add(nodeId);
 						this.informations.myMap.addNode(nodeId, MapAttribute.open);
-					    this.informations.myMap.addEdge(myPosition, nodeId);	
+					    //this.informations.myMap.addEdge(myPosition, nodeId);	
+						this.informations.addEdge(myPosition, nodeId);
 					}else{
-						this.informations.myMap.addEdge(myPosition, nodeId);
+						//this.informations.myMap.addEdge(myPosition, nodeId);
+						this.informations.addEdge(myPosition, nodeId);
 					}
 					if (nextNode==null) nextNode=nodeId;
 				}
 			}
 
 			// change after
-			if (this.informations.openNodes.isEmpty()){
+		/*	if (this.informations.openNodes.isEmpty()){
 				finished=true;
 				System.out.println("Exploration successufully done, behaviour removed.");
 			}else{
@@ -86,10 +89,15 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 					nextNode=this.informations.myMap.getShortestPath(myPosition, this.informations.openNodes.get(0)).get(0);
 				}
 				
-				if(((AbstractDedaleAgent)this.myAgent).moveTo(nextNode)) {
-					System.out.println("block");
-				}
+				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+				System.out.println(nextNode);
+				
+			}*/
+			if (nextNode==null){
+				nextNode=this.informations.myMap.getShortestPath(myPosition, this.informations.openNodes.get(0)).get(0);
 			}
+			((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+
 
 		}
 	}

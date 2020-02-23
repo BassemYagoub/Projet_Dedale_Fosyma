@@ -23,6 +23,8 @@ public class AgentInformations implements Serializable {
 	public List<String> openNodes;
 	
 	public HashMap<String,String> agentsKey;
+	// position : List<d'arêtes>
+	private HashMap<String,ArrayList<String>> edges;
 	private ArrayList<String> receivers;
 	
 	// state agent working,pending ...
@@ -48,14 +50,19 @@ public class AgentInformations implements Serializable {
 		return closedNodes;
 	}
 	
+	public HashMap<String,ArrayList<String>> getEdges(){
+		return this.edges;
+	}
+	
 	public AgentInformations(ArrayList<String> receivers) {
-		openNodes = new ArrayList<String>();
-		closedNodes = new HashSet<String>();
+		this.openNodes = new ArrayList<String>();
+		this.closedNodes = new HashSet<String>();
 		this.agentsKey = new HashMap<String,String>();
 		this.receivers = receivers;
-		treeKey =new TreeSet<String>();
+		this.treeKey =new TreeSet<String>();
 		this.customKey = "";
 		this.state = AgentState.Working;
+		this.edges = new HashMap<String,ArrayList<String>>();
 
 	}
 	
@@ -74,14 +81,29 @@ public class AgentInformations implements Serializable {
 		
 	}
 	
-	public void mergeClosedNodes(Set<String> nodes) {
-		for (String node : nodes){
-			   if (!closedNodes.contains(node)) {
+	public void mergeInformations(Set<String> _closedNodes , HashMap<String,ArrayList<String>> edges , List<String> _openNodes) {
+		for (String node : _closedNodes){
+			   if (!_closedNodes.contains(node)) {
+				  // add closed nodes
 				   myMap.addNode(node, MapAttribute.closed);
-				   closedNodes.add(node);
-				   treeKey.add(node); 
+				   _closedNodes.add(node);
+				   treeKey.add(node);
+				   
+				   // add edges
+				   if(edges.containsKey(node)) {
+					   for(String edge : edges.get(node)) {
+						   this.myMap.addNode(edge, MapAttribute.open);
+						   this.myMap.addEdge(node, edge);
+					   }
+				   } 
 			   }
 			}
+		
+		for(String node : _openNodes) {
+		   if (!_openNodes.contains(node)) {
+			   this.openNodes.add(node);
+		   }
+		}
 	}
 	/*
 	 * if the key isn't the same then we change and return false
@@ -100,7 +122,14 @@ public class AgentInformations implements Serializable {
 			return false;
 		}
 	}
-
-
+	
+	public void addEdge(String position , String nodeId) {
+		this.myMap.addEdge(position, nodeId);
+		if(!this.edges.containsKey(position)) {
+			this.edges.put(position, new ArrayList<String>());
+		}
+		
+		this.edges.get(position).add(nodeId);
+	}
 
 }

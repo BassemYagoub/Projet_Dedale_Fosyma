@@ -28,7 +28,7 @@ public class SynchronizeMessage extends CyclicBehaviour{
 		{
 			// update agent sender key
 			informations.addOrUpdate(object.getValue().getSender().getLocalName(), object.getKey().getKey());
-			informations.mergeClosedNodes(object.getKey().getClosedNodes());	
+			informations.mergeInformations(object.getKey().getClosedNodes(),object.getKey().getEdges(),object.getKey().getOpenNodes());	
 			//wakeup agent
 			informations.state = AgentState.Working;
 

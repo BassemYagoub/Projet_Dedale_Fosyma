@@ -1,5 +1,7 @@
 package eu.su.mas.dedaleEtu.mas.protocol;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +25,26 @@ public class SynchronizeMessage implements Serializable{
 		this.closedNodes = closedNodes;
 	}
 
+	public HashMap<String, ArrayList<String>> getEdges() {
+		return edges;
+	}
+
+	public void setEdges(HashMap<String, ArrayList<String>> edges) {
+		this.edges = edges;
+	}
+	
+	private  List<String> openNodes;
+	
+	public List<String> getOpenNodes() {
+		return openNodes;
+	}
+
+	public void setOpenNodes(List<String> openNodes) {
+		this.openNodes = openNodes;
+	}
+
 	private  Set<String> closedNodes;
+	private  HashMap<String,ArrayList<String>> edges;
 	private  String 		key;
 	
 }

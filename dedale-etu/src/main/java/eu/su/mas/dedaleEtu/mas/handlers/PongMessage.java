@@ -30,6 +30,8 @@ public class PongMessage extends CyclicBehaviour{
 				SynchronizeMessage message = new SynchronizeMessage();
 				message.setClosedNodes(informations.getClosedNodes());
 				message.setKey(informations.getAgentKey());
+				message.setEdges(informations.getEdges());
+				message.setOpenNodes(informations.openNodes);
 				PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message);
 			}
 
