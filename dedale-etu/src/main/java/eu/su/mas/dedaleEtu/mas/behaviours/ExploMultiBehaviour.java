@@ -80,7 +80,7 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 			}
 
 			// change after
-		/*	if (this.informations.openNodes.isEmpty()){
+			if (this.informations.openNodes.isEmpty()){
 				finished=true;
 				System.out.println("Exploration successufully done, behaviour removed.");
 			}else{
@@ -90,13 +90,9 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 				}
 				
 				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
-				System.out.println(nextNode);
 				
-			}*/
-			if (nextNode==null){
-				nextNode=this.informations.myMap.getShortestPath(myPosition, this.informations.openNodes.get(0)).get(0);
 			}
-			((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+
 
 
 		}

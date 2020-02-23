@@ -83,11 +83,11 @@ public class AgentInformations implements Serializable {
 	
 	public void mergeInformations(Set<String> _closedNodes , HashMap<String,ArrayList<String>> edges , List<String> _openNodes) {
 		for (String node : _closedNodes){
-			   if (!_closedNodes.contains(node)) {
+			   if (!this.closedNodes.contains(node)) {
 				  // add closed nodes
-				   myMap.addNode(node, MapAttribute.closed);
-				   _closedNodes.add(node);
-				   treeKey.add(node);
+				   this.myMap.addNode(node, MapAttribute.closed);
+				   this.closedNodes.add(node);
+				   this.treeKey.add(node);
 				   
 				   // add edges
 				   if(edges.containsKey(node)) {
@@ -100,7 +100,7 @@ public class AgentInformations implements Serializable {
 			}
 		
 		for(String node : _openNodes) {
-		   if (!_openNodes.contains(node)) {
+		   if (!this.openNodes.contains(node)) {
 			   this.openNodes.add(node);
 		   }
 		}

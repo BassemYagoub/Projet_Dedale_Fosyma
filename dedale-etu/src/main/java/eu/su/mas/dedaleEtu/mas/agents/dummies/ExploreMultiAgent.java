@@ -46,7 +46,7 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		
 		stateMachine.registerFirstState(new ExploMultiBehaviour(this,informations), "A");
 		//refactor after
-		stateMachine.registerState(new ExploPendingBehaviour(this,1,informations), "B");
+		stateMachine.registerState(new ExploPendingBehaviour(this,2000,informations), "B");
 
 		stateMachine.registerTransition("A","A",AgentState.Working.ordinal()); // 0 for staying A  <-> A
 		stateMachine.registerTransition("A","B",AgentState.Pending.ordinal()); // 1 for staying A  -> B
