@@ -1,6 +1,7 @@
 package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,11 @@ import java.util.TreeSet;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
+import jade.core.Agent;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.util.leap.Serializable;
 
 /**
@@ -42,6 +48,10 @@ public class AgentInformations implements Serializable {
 		return this.receivers;
 	}
 	
+	public void setReceivers( ArrayList<String> receivers){
+		 this.receivers = receivers;
+	}
+	
 	public String getAgentKey() {
 		return customKey;
 	}
@@ -52,6 +62,10 @@ public class AgentInformations implements Serializable {
 	
 	public HashMap<String,ArrayList<String>> getEdges(){
 		return this.edges;
+	}
+	
+	public AgentInformations() {
+		this(null);
 	}
 	
 	public AgentInformations(ArrayList<String> receivers) {
@@ -131,5 +145,24 @@ public class AgentInformations implements Serializable {
 		
 		this.edges.get(position).add(nodeId);
 	}
+	
+	public ArrayList<String> getTyeReceivers(String type , Agent myagent) {
+		ArrayList<String> results = new ArrayList<String>();
+        try {
+            DFAgentDescription dfd = new DFAgentDescription();
+            ServiceDescription sd2 = new ServiceDescription();
+            sd2.setType(type);
+            dfd.addServices(sd2);
+            for(DFAgentDescription i :  DFService.search(myagent, dfd)) {
+            	results.add(i.getName().getLocalName());
+            }
+
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
+        
+        return results;
+
+	}	
 
 }

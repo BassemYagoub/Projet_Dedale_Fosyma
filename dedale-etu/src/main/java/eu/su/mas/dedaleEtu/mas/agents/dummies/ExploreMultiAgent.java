@@ -1,6 +1,7 @@
 package eu.su.mas.dedaleEtu.mas.agents.dummies;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
@@ -16,6 +17,10 @@ import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.FSMBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 
 public class ExploreMultiAgent extends AbstractDedaleAgent {
@@ -33,12 +38,15 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		final Object[] args = getArguments();
         final ArrayList<String> receivers = new ArrayList<String> ();
 
-        for(Object arg : args) {
+        /*
+         * old version for get receivers
+         * for(Object arg : args) {
             // very hard pop,refactor this after ( ignore 2 first parametre) 
             if (arg == args[0] || arg == args[1]) continue;
             receivers.add((String) arg);
-        }
+        }*/
         
+        this.addServiceAgent("exploration");
         informations = new AgentInformations(receivers);
 
 		//lb.add(new ExploSoloBehaviour(this,informations.myMap));
@@ -65,6 +73,20 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 
 	}
 	
+	protected void addServiceAgent(String type) {
+	     DFAgentDescription dfdescr = new DFAgentDescription();
+	        dfdescr.setName(getAID());
+	        
+	        ServiceDescription sd = new ServiceDescription();
+	        sd.setType(type);
+	        sd.setName(getLocalName());
+	        dfdescr.addServices(sd);
+	        try {
+	            DFService.register(this, dfdescr);
+	        }catch (FIPAException e) {
+	            System.err.println("FIPA ERROR ExploreMultiAgent");
+	        }
+	}
 	
-	
+
 }

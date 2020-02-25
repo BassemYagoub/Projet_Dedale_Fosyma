@@ -36,8 +36,11 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		if(this.informations.myMap==null)
+		if(this.informations.myMap==null) {
 			this.informations.myMap= new MapRepresentation();
+			this.informations.setReceivers(this.informations.getTyeReceivers("exploration", this.myAgent));
+
+		}
 		System.out.println(this.informations.getClosedNodes().size());
 
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
