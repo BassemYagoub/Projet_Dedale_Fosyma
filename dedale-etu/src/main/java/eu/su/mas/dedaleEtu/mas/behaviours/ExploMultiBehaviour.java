@@ -15,6 +15,7 @@ import eu.su.mas.dedaleEtu.mas.knowledge.AgentInformations;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.protocol.PingMessage;
+import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
 import eu.su.mas.dedaleEtu.mas.toolBox.PacketManager;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
@@ -41,8 +42,7 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 			this.informations.setReceivers(this.informations.getTyeReceivers("exploration", this.myAgent));
 
 		}
-		System.out.println(this.informations.getClosedNodes().size());
-
+		System.out.println("agent : "+myAgent.getLocalName() + " nbr : "+this.informations.getClosedNodes().size());
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
 		if (myPosition!=null){
@@ -57,9 +57,7 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 			//this.informations.closedNodes.add(myPosition);
 			this.informations.addCurrentPositon(myPosition);
 			
-			PingMessage message = new PingMessage();
-			message.setKey(informations.getAgentKey());
-			PacketManager.Send(this.myAgent, informations.getReceivers(),message);
+	
 			
 			this.informations.openNodes.remove(myPosition);
 			this.informations.myMap.addNode(myPosition,MapAttribute.closed);
@@ -95,10 +93,8 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
 				
 			}
-
-
-
 		}
+		informations.state = AgentState.SendingPing;
 	}
 	
 	public int onEnd() {

@@ -25,6 +25,7 @@ import jade.util.leap.Serializable;
 public class AgentInformations implements Serializable {
 
 
+	public static final long  DefaultTimeOut = 50000;
 	public MapRepresentation myMap;
 	public List<String> openNodes;
 	
@@ -34,7 +35,7 @@ public class AgentInformations implements Serializable {
 	private ArrayList<String> receivers;
 	
 	// state agent working,pending ...
-	public AgentState state;
+	public AgentState state =  AgentState.Exploring;
 
 	// todo : refactor after (encapsulate in 1 class  and create own method) 
 	private Set<String> closedNodes;
@@ -75,7 +76,6 @@ public class AgentInformations implements Serializable {
 		this.receivers = receivers;
 		this.treeKey =new TreeSet<String>();
 		this.customKey = "";
-		this.state = AgentState.Working;
 		this.edges = new HashMap<String,ArrayList<String>>();
 
 	}
@@ -133,6 +133,19 @@ public class AgentInformations implements Serializable {
 			}
 		}else {
 			agentsKey.put(agentName, Key);
+			return false;
+		}
+	}
+	
+	public Boolean isSameKey(String agentName , String Key) {
+		if(agentsKey.containsKey(agentName)) {
+
+			if(agentsKey.get(agentName)== Key) {
+				return true;
+			}else {
+				return false;
+			}
+		}else {
 			return false;
 		}
 	}

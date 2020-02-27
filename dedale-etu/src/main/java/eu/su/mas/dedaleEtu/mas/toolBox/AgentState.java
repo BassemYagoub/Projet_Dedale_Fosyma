@@ -1,9 +1,15 @@
 package eu.su.mas.dedaleEtu.mas.toolBox;
 
 public enum AgentState {
-	Working,
-	Pending,
+	Nothing,
+	Dispatcher,
+	Exploring,
+	SendingPing,
+	HandlerPingMessage,
+	HandlerPongMessage,
+	HandlerSynchronizeMessage,
 	Blocking,
+	Redirect,
 	Done
 	
 }

@@ -5,12 +5,15 @@ import eu.su.mas.dedaleEtu.mas.knowledge.AgentInformations;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
 import eu.su.mas.dedaleEtu.mas.toolBox.PacketManager;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.SimpleBehaviour;
+import jade.domain.ams;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import javafx.util.Pair;
 
-public class SynchronizeMessage extends CyclicBehaviour{
+public class SynchronizeMessage extends OneShotBehaviour{
 
 	
 	private String position;
@@ -21,22 +24,16 @@ public class SynchronizeMessage extends CyclicBehaviour{
 	}
 	@Override
 	public void action() {
-		
 		Pair<eu.su.mas.dedaleEtu.mas.protocol.SynchronizeMessage,ACLMessage> object = PacketManager.ReceiveByClassName(this.getClass().getSimpleName(), myAgent);
-
-		if(object != null)
-		{
-			// update agent sender key
-			informations.addOrUpdate(object.getValue().getSender().getLocalName(), object.getKey().getKey());
-			informations.mergeInformations(object.getKey().getClosedNodes(),object.getKey().getEdges(),object.getKey().getOpenNodes());	
-			//wakeup agent
-			informations.state = AgentState.Working;
-
-		}else
-		{
-			block();
-		}
+		// update agent sender key
+		informations.addOrUpdate(object.getValue().getSender().getLocalName(), object.getKey().getKey());
+		informations.mergeInformations(object.getKey().getClosedNodes(),object.getKey().getEdges(),object.getKey().getOpenNodes());
+		informations.state = AgentState.Exploring;
 		
 	}
-
+	
+	@Override
+	public int onEnd() {
+		return AgentState.Redirect.ordinal();
+	}
 }

@@ -40,6 +40,40 @@ public class PacketManager {
 
 	}
 	
+	public static<T> Pair<T,ACLMessage> BlockingReceiveByClassName(String className , Agent myAgent , long timeOut) {
+	
+		MessageTemplate msgTemplate = MessageTemplate.MatchProtocol(className);
+		ACLMessage msg = myAgent.blockingReceive(msgTemplate,timeOut);
+		
+		if(msg == null) {
+			return null;
+		}else {
+			try {
+				return new Pair<T,ACLMessage>((T)msg.getContentObject(),msg);
+			} catch (UnreadableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+	
+	public static<T> Pair<T,ACLMessage> BlockingReceiveByClassName(String className , Agent myAgent) {
+		MessageTemplate msgTemplate = MessageTemplate.MatchProtocol(className);
+		ACLMessage msg = myAgent.blockingReceive(msgTemplate);
+		if(msg == null) {
+			return null;
+		}else {
+			try {
+				return new Pair<T,ACLMessage>((T)msg.getContentObject(),msg);
+			} catch (UnreadableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+	
 	public static<T> Pair<T,ACLMessage> ReceiveByClassName(String className , Agent myAgent) {
 		MessageTemplate msgTemplate = MessageTemplate.MatchProtocol(className);
 		ACLMessage msg = myAgent.receive(msgTemplate);
