@@ -8,6 +8,7 @@ public enum AgentState {
 	HandlerPingMessage,
 	HandlerPongMessage,
 	HandlerSynchronizeMessage,
+	HandlerIsBusyMessage,
 	Blocking,
 	Redirect,
 	Done

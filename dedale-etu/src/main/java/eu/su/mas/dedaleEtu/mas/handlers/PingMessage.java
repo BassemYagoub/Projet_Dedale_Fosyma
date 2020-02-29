@@ -37,8 +37,10 @@ public class PingMessage extends OneShotBehaviour{
 			message.setSynchronize(false);
 		}
 		
-		PacketManager.Send(myAgent,object.getValue().getSender().getLocalName(), message);
+		PacketManager.Send(myAgent,object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
+		
 		informations.state = AgentState.Dispatcher;	
+		informations.currentConversation = object.getValue().getSender().getLocalName();
 		
 	}
 

@@ -29,6 +29,7 @@ public class SynchronizeMessage extends OneShotBehaviour{
 		informations.addOrUpdate(object.getValue().getSender().getLocalName(), object.getKey().getKey());
 		informations.mergeInformations(object.getKey().getClosedNodes(),object.getKey().getEdges(),object.getKey().getOpenNodes());
 		informations.state = AgentState.Exploring;
+		informations.currentConversation = null;
 		
 	}
 	

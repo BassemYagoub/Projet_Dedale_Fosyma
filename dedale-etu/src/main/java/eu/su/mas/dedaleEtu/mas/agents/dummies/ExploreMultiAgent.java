@@ -11,6 +11,7 @@ import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.RedirectBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.SendingPingMessageBehaviour;
 import eu.su.mas.dedaleEtu.mas.handlers.DispatcherMessage;
+import eu.su.mas.dedaleEtu.mas.handlers.IsBusyMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.PingMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.PongMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.SynchronizeMessage;
@@ -63,20 +64,25 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		stateMachine.registerState(new PingMessage(this,informations), "HandlerPingMessage");
 		stateMachine.registerState(new PongMessage(this,informations), "HandlerPongMessage");
 		stateMachine.registerState(new SynchronizeMessage(this,informations), "HandlerSynchronizeMessage");
+		stateMachine.registerState(new IsBusyMessage(this,informations), "HandlerIsBusyMessage");
 
 		
 		stateMachine.registerTransition("Exploring","SendingPing",AgentState.SendingPing.ordinal()); 
 		stateMachine.registerTransition("SendingPing","Dispatcher",AgentState.Dispatcher.ordinal()); 
 		
+		
+		stateMachine.registerTransition("Dispatcher","Dispatcher",AgentState.Dispatcher.ordinal()); 
 		stateMachine.registerTransition("Dispatcher","Exploring",AgentState.Exploring.ordinal()); 
 		stateMachine.registerTransition("Dispatcher","HandlerPingMessage",AgentState.HandlerPingMessage.ordinal()); 
 		stateMachine.registerTransition("Dispatcher","HandlerPongMessage",AgentState.HandlerPongMessage.ordinal()); 
 		stateMachine.registerTransition("Dispatcher","HandlerSynchronizeMessage",AgentState.HandlerSynchronizeMessage.ordinal()); 
+		stateMachine.registerTransition("Dispatcher","HandlerIsBusyMessage",AgentState.HandlerIsBusyMessage.ordinal()); 
 
 		
 		stateMachine.registerTransition("HandlerPingMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		stateMachine.registerTransition("HandlerPongMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		stateMachine.registerTransition("HandlerSynchronizeMessage","Redirect",AgentState.Redirect.ordinal()); 		
+		stateMachine.registerTransition("HandlerIsBusyMessage","Redirect",AgentState.Redirect.ordinal()); 		
 
 		
 		stateMachine.registerTransition("Redirect","Dispatcher",AgentState.Dispatcher.ordinal()); 		

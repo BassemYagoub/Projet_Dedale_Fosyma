@@ -18,12 +18,22 @@ import javafx.util.Pair;
 public class PacketManager {
 	
 	public static void Send(Agent sender , String receiver , Serializable message) {
-		PacketManager.Send(sender,  new	ArrayList<String>(Arrays.asList(receiver)), message);
+		PacketManager.Send(sender,  new	ArrayList<String>(Arrays.asList(receiver)), message,null);
 	}
+	
+	public static void Send(Agent sender , String receiver , Serializable message , String conversationId) {
+		PacketManager.Send(sender,  new	ArrayList<String>(Arrays.asList(receiver)), message,conversationId);
+	}
+	
 	public static void Send(Agent sender , ArrayList<String> receivers , Serializable message) {
+		PacketManager.Send(sender,receivers, message,null);
+	}
+	public static void Send(Agent sender , ArrayList<String> receivers , Serializable message , String conversationId) {
 
 		final ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setSender(sender.getAID());
+		if(conversationId != null)
+			msg.setConversationId(conversationId);
 		String className = message.getClass().getSimpleName();
 		msg.setProtocol(className);
 		for(String receiver  : receivers) {
@@ -37,6 +47,8 @@ public class PacketManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		int a = 6;
+		a = 8;
 
 	}
 	

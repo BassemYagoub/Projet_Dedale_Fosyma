@@ -33,7 +33,7 @@ public class PongMessage extends OneShotBehaviour{
 			message.setKey(informations.getAgentKey());
 			message.setEdges(informations.getEdges());
 			message.setOpenNodes(informations.openNodes);
-			PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message);
+			PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
 		}
 		
 		informations.state	= AgentState.Dispatcher;	

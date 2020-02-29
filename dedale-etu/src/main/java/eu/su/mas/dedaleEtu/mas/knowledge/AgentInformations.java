@@ -41,6 +41,8 @@ public class AgentInformations implements Serializable {
 	private Set<String> closedNodes;
 	
 	
+	public String currentConversation = null;
+	
 	TreeSet<String> treeKey;	
 	private String customKey;
 
@@ -167,7 +169,11 @@ public class AgentInformations implements Serializable {
             sd2.setType(type);
             dfd.addServices(sd2);
             for(DFAgentDescription i :  DFService.search(myagent, dfd)) {
-            	results.add(i.getName().getLocalName());
+            	if(!i.getName().getLocalName().equals(myagent.getLocalName())) {
+            		String a = i.getName().getLocalName();
+            		String b = myagent.getLocalName();
+            		results.add(i.getName().getLocalName());
+            	}
             }
 
         } catch (FIPAException e) {
