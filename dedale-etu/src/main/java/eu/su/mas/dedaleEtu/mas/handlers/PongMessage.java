@@ -36,6 +36,7 @@ public class PongMessage extends OneShotBehaviour{
 			PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
 		}
 		
+		informations.currentConversation = object.getValue().getSender().getLocalName();
 		informations.state	= AgentState.Dispatcher;	
 	}
 	

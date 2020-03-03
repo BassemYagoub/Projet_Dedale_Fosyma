@@ -25,7 +25,7 @@ import jade.util.leap.Serializable;
 public class AgentInformations implements Serializable {
 
 
-	public static final long  DefaultTimeOut = 50000;
+	public static final long  DefaultTimeOut = 2000;
 	public MapRepresentation myMap;
 	public List<String> openNodes;
 	
@@ -33,6 +33,8 @@ public class AgentInformations implements Serializable {
 	// position : List<d'arêtes>
 	private HashMap<String,ArrayList<String>> edges;
 	private ArrayList<String> receivers;
+	
+	public ArrayList<String> AgentKnowing;
 	
 	// state agent working,pending ...
 	public AgentState state =  AgentState.Exploring;
@@ -79,6 +81,7 @@ public class AgentInformations implements Serializable {
 		this.treeKey =new TreeSet<String>();
 		this.customKey = "";
 		this.edges = new HashMap<String,ArrayList<String>>();
+		this.AgentKnowing  = new ArrayList<String>();
 
 	}
 	

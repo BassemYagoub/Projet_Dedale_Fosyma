@@ -42,7 +42,7 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 			this.informations.setReceivers(this.informations.getTyeReceivers("exploration", this.myAgent));
 
 		}
-		System.out.println("agent : "+myAgent.getLocalName() + " nbr : "+this.informations.getClosedNodes().size());
+	//	System.out.println("agent : "+myAgent.getLocalName() + " nbr : "+this.informations.getClosedNodes().size());
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
 		if (myPosition!=null){
@@ -64,18 +64,20 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 
 			String nextNode=null;
 			Iterator<Couple<String, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
+			ArrayList<String> nodes = new ArrayList<String>();
 			while(iter.hasNext()){
 				String nodeId=iter.next().getLeft();
 				if (!this.informations.getClosedNodes().contains(nodeId)){
+					this.informations.myMap.addNode(nodeId, MapAttribute.open);
 					if (!this.informations.openNodes.contains(nodeId)){
 						this.informations.openNodes.add(nodeId);
-						this.informations.myMap.addNode(nodeId, MapAttribute.open);
 					    //this.informations.myMap.addEdge(myPosition, nodeId);	
 						this.informations.addEdge(myPosition, nodeId);
 					}else{
 						//this.informations.myMap.addEdge(myPosition, nodeId);
 						this.informations.addEdge(myPosition, nodeId);
 					}
+					nodes.add(nodeId);
 					if (nextNode==null) nextNode=nodeId;
 				}
 			}
@@ -88,9 +90,10 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 
 				if (nextNode==null){
 					nextNode=this.informations.myMap.getShortestPath(myPosition, this.informations.openNodes.get(0)).get(0);
+					nodes.add(nextNode);
 				}
 				
-				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+				((AbstractDedaleAgent)this.myAgent).moveTo(nodes.get(0));
 				
 			}
 		}
