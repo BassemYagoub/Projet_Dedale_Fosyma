@@ -57,19 +57,21 @@ public final class ConfigurationFile {
 	/**
 	 * Not null when the environment is loaded; should be null if the environment is generated or already online
 	 */
-	public static String INSTANCE_TOPOLOGY=null;
+	public static String INSTANCE_TOPOLOGY="resources/topology/BinaryTree1";
 	//public static String INSTANCE_TOPOLOGY="resources/topology/map2018-topology-ica";
 	//public static String INSTANCE_TOPOLOGY="resources/interlocking/mapInterlocking2-topology";
 	//public static String INSTANCE_TOPOLOGY="resources/HouatTopology";
 	//public static String INSTANCE_TOPOLOGY="resources/map2018-topology";
 	//public static String INSTANCE_TOPOLOGY="resources/map2019-topologyExam1";
+	//public static String INSTANCE_TOPOLOGY="resources/topology/map2018-topology-ica";
+
 	
 	
 	/**
 	 * Not null when the environment is loaded; should be null if the environment is generated or already online
 	 */
-	public static String INSTANCE_CONFIGURATION_ELEMENTS=null;
-	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/distributedExploration/emptyMap";
+	//public static String INSTANCE_CONFIGURATION_ELEMENTS=null;
+	public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/distributedExploration/emptyMap";
 	 //public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/treasureHunt/map2018-elements-ica";
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/interlocking/mapInterlocking2-elements";
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/Houat-elements";
