@@ -37,7 +37,7 @@ public class DummyMovingAgent extends AbstractDedaleAgent{
 
 		//get the parameters given into the object[]
 		final Object[] args = getArguments();
-		System.out.println("Arg given by the user to "+this.getLocalName()+": "+args[2]);
+		//System.out.println("Arg given by the user to "+this.getLocalName()+": "+args[2]);
 		
 		//use them as parameters for your behaviours is you want
 		
@@ -49,7 +49,7 @@ public class DummyMovingAgent extends AbstractDedaleAgent{
 		 * 
 		 ************************************************/
 		lb.add(new RandomWalkBehaviour(this));
-		lb.add(new SayHello(this));
+		//lb.add(new SayHello(this));
 		
 		
 		/***
@@ -61,28 +61,6 @@ public class DummyMovingAgent extends AbstractDedaleAgent{
 	}
 
 
-	/**
-	 * This method is automatically called after doDelete()
-	 */
-	protected void takeDown(){
-		super.takeDown();
-	}
-	
-	/**
-	 * This method is automatically called before migration. 
-	 * You can add here all the saving you need
-	 */
-	protected void beforeMove(){
-		super.beforeMove();
-	}
-	
-	/**
-	 * This method is automatically called after migration to reload. 
-	 * You can add here all the info regarding the state you want your agent to restart from 
-	 * 
-	 */
-	protected void afterMove(){
-		super.afterMove();
-	}
+
 
 }

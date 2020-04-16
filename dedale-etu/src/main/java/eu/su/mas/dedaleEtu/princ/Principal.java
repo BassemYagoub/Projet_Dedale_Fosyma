@@ -408,7 +408,7 @@ public class Principal {
 		
 		//4) Give the class name of your agent to let the system instantiate it
 		ag=createNewDedaleAgent(c, agentName, ExploreMultiAgent.class.getName(), entityParametersExplo2);//ExploreSoloAgent
-		agentList.add(ag);
+		//agentList.add(ag);
 
 		//agent 3 
 		//1) Get the container where the agent will appear
@@ -437,7 +437,7 @@ public class Principal {
 		Object [] entityParametersExplo4={"aaa"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		ag=createNewDedaleAgent(c, agentName, DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
+		ag=createNewDedaleAgent(c, agentName, eu.su.mas.dedaleEtu.mas.agents.dummies.DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
 		agentList.add(ag);//		
 		
 		/*********

@@ -47,7 +47,9 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 
 		if (myPosition!=null){
 			List<Couple<String,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
-
+			for(Couple<String,List<Couple<Observation,Integer>>> m : lobs) {
+				System.out.println(m.getRight().toString());
+			}
 			try {
 				this.myAgent.doWait(500);
 			} catch (Exception e) {

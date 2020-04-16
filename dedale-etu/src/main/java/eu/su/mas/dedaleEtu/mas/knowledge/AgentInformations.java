@@ -25,7 +25,7 @@ import jade.util.leap.Serializable;
 public class AgentInformations implements Serializable {
 
 
-	public static final long  DefaultTimeOut = 2000;
+	public static final long  DefaultTimeOut = 500;
 	public MapRepresentation myMap;
 	public List<String> openNodes;
 	

@@ -34,15 +34,15 @@ public class RandomWalkBehaviour extends TickerBehaviour{
 	public void onTick() {
 		//Example to retrieve the current position
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
-		System.out.println(this.myAgent.getLocalName()+" -- myCurrentPosition is: "+myPosition);
+	//	System.out.println(this.myAgent.getLocalName()+" -- myCurrentPosition is: "+myPosition);
 		if (myPosition!=null){
 			//List of observable from the agent's current position
 			List<Couple<String,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
-			System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lobs);
+			//System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lobs);
 
 			//Little pause to allow you to follow what is going on
 			try {
-				System.out.println("Press enter in the console to allow the agent "+this.myAgent.getLocalName() +" to execute its next move");
+			//	System.out.println("Press enter in the console to allow the agent "+this.myAgent.getLocalName() +" to execute its next move");
 				System.in.read();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -52,7 +52,7 @@ public class RandomWalkBehaviour extends TickerBehaviour{
 			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
 
 			//example related to the use of the backpack for the treasure hunt
-			Boolean b=false;
+			/*Boolean b=false;
 			for(Couple<Observation,Integer> o:lObservations){
 				switch (o.getLeft()) {
 				case DIAMOND:case GOLD:
@@ -73,7 +73,7 @@ public class RandomWalkBehaviour extends TickerBehaviour{
 			if (b){
 				List<Couple<String,List<Couple<Observation,Integer>>>> lobs2=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
 				System.out.println(this.myAgent.getLocalName()+" - State of the observations after trying to pick something "+lobs2);
-			}
+			}*/
 
 			//Random move from the current position
 			Random r= new Random();
