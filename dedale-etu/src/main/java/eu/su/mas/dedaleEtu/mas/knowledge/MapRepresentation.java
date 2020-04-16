@@ -68,7 +68,6 @@ public class MapRepresentation implements Serializable {
 		//this.viewer = this.g.display();
 
 		this.nbEdges=0;
-		
 	}
 
 	/**
@@ -77,7 +76,6 @@ public class MapRepresentation implements Serializable {
 	 * @param mapAttribute associated state of the node
 	 */
 	public void addNode(String id,MapAttribute mapAttribute){
-	
 		Node n;
 		if (this.g.getNode(id)==null){
 			n=this.g.addNode(id);
