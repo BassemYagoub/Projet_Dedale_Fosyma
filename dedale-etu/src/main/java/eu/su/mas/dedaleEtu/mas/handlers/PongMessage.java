@@ -27,16 +27,23 @@ public class PongMessage extends OneShotBehaviour{
 	@Override
 	public void action() {
 		Pair<eu.su.mas.dedaleEtu.mas.protocol.PongMessage,ACLMessage> object = PacketManager.ReceiveByClassName(this.getClass().getSimpleName(), myAgent);
+		
+		if(informations.currentConversation == null) {
+			informations.currentConversation = object.getValue().getSender().getLocalName();
+		}
+		
 		if(object.getKey().getSynchronize()) {
 			SynchronizeMessage message = new SynchronizeMessage();
 			message.setClosedNodes(informations.getClosedNodes());
 			message.setKey(informations.getAgentKey());
 			message.setEdges(informations.getEdges());
 			message.setOpenNodes(informations.openNodes);
+			message.setSendMessage(true); // pour que l'agent qui envoie la sync peut recevoir aussi la sync de l'autre agent
 			PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
+
 		}
 		
-		informations.currentConversation = object.getValue().getSender().getLocalName();
+
 		informations.state	= AgentState.Dispatcher;	
 	}
 	

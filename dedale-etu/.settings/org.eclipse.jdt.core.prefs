@@ -1,7 +1,4 @@
 eclipse.preferences.version=1
-<<<<<<< HEAD
-org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
-=======
 org.eclipse.jdt.core.compiler.annotation.inheritNullAnnotations=disabled
 org.eclipse.jdt.core.compiler.annotation.missingNonNullByDefaultAnnotation=ignore
 org.eclipse.jdt.core.compiler.annotation.nonnull=org.eclipse.jdt.annotation.NonNull
@@ -13,18 +10,12 @@ org.eclipse.jdt.core.compiler.annotation.nullable.secondary=
 org.eclipse.jdt.core.compiler.annotation.nullanalysis=disabled
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.methodParameters=do not generate
->>>>>>> d46e1a1879e4370286cc7d081c7399c1b8a2eb5d
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8
 org.eclipse.jdt.core.compiler.codegen.unusedLocal=preserve
 org.eclipse.jdt.core.compiler.compliance=1.8
 org.eclipse.jdt.core.compiler.debug.lineNumber=generate
 org.eclipse.jdt.core.compiler.debug.localVariable=generate
 org.eclipse.jdt.core.compiler.debug.sourceFile=generate
-<<<<<<< HEAD
-org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
-org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
-org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
-=======
 org.eclipse.jdt.core.compiler.problem.APILeak=warning
 org.eclipse.jdt.core.compiler.problem.annotationSuperInterface=warning
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
@@ -119,6 +110,5 @@ org.eclipse.jdt.core.compiler.problem.unusedPrivateMember=warning
 org.eclipse.jdt.core.compiler.problem.unusedTypeParameter=ignore
 org.eclipse.jdt.core.compiler.problem.unusedWarningToken=warning
 org.eclipse.jdt.core.compiler.problem.varargsArgumentNeedCast=warning
->>>>>>> d46e1a1879e4370286cc7d081c7399c1b8a2eb5d
 org.eclipse.jdt.core.compiler.release=disabled
 org.eclipse.jdt.core.compiler.source=1.8

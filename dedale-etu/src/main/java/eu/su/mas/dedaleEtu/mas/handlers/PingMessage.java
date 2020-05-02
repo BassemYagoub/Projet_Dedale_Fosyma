@@ -36,9 +36,20 @@ public class PingMessage extends OneShotBehaviour{
 		}else {
 			message.setSynchronize(false);
 		}
+		long timeSenderSendedMessage = object.getValue().getPostTimeStamp();
+		long agentSentMessage  = informations.getCacheMessage(object.getValue().getSender().getLocalName());
+		if(agentSentMessage == -1 || (agentSentMessage > timeSenderSendedMessage)) {
+			PacketManager.Send(myAgent,object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
+			informations.currentConversation = object.getValue().getSender().getLocalName();
+		}else {
+			// si tout de même ils ont envoyer en même moment en fait une comparaison par nom
+			if(agentSentMessage == timeSenderSendedMessage && this.myAgent.getLocalName().compareTo(object.getValue().getSender().getLocalName()) >= 1) {
+				PacketManager.Send(myAgent,object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
+				informations.currentConversation = object.getValue().getSender().getLocalName();
+
+			}
+		}
 		
-		PacketManager.Send(myAgent,object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
-		informations.currentConversation = object.getValue().getSender().getLocalName();
 
 		informations.state = AgentState.Dispatcher;	
 		//informations.AgentKnowing.add(object.getValue().getSender().getLocalName());

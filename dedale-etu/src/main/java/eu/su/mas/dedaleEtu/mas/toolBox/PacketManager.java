@@ -47,8 +47,7 @@ public class PacketManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int a = 6;
-		a = 8;
+
 
 	}
 	

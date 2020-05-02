@@ -11,6 +11,8 @@ import java.util.TreeSet;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -47,7 +49,13 @@ public class AgentInformations implements Serializable {
 	
 	TreeSet<String> treeKey;	
 	private String customKey;
-
+	
+	private HashMap<String,Long> cacheMessages = new HashMap<String,Long> ();
+	
+	public Integer coalitionId;
+	public Boolean isHunter;
+	public HashMap<String,Behaviour> statsMachine;
+	public Behaviour currentBehaviour;
 	// getter 
 	public ArrayList<String> getReceivers(){
 		return this.receivers;
@@ -82,6 +90,10 @@ public class AgentInformations implements Serializable {
 		this.customKey = "";
 		this.edges = new HashMap<String,ArrayList<String>>();
 		this.AgentKnowing  = new ArrayList<String>();
+		this.coalitionId = -1;
+		this.isHunter = false;
+		this.currentBehaviour = null;
+		this.statsMachine = new HashMap<String,Behaviour>();
 
 	}
 	
@@ -186,5 +198,32 @@ public class AgentInformations implements Serializable {
         return results;
 
 	}	
+	
+	public void updateCacheReceivers(ArrayList<String> receivers) {
+		for(String i : receivers) {
+			this.addOrUpdateCacheMessage(i, System.currentTimeMillis());
+		}
+	}
+	public void addOrUpdateCacheMessage(String agent , Long time) {
+		
+		if(cacheMessages.containsKey(agent)) {
+
+			cacheMessages.replace(agent, time);
+			
+		}else {
+			cacheMessages.put(agent, time);
+		}
+	}
+	
+	public long getCacheMessage(String agent) {
+		
+		if(cacheMessages.containsKey(agent)) {
+	
+			return cacheMessages.get(agent);
+			
+		}else {
+			return -1;
+		}
+	}
 
 }

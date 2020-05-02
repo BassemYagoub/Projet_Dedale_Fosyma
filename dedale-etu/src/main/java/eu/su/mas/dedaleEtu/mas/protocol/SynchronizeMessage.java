@@ -43,8 +43,17 @@ public class SynchronizeMessage implements Serializable{
 		this.openNodes = openNodes;
 	}
 
+	public Boolean getSendMessage() {
+		return SendMessage;
+	}
+
+	public void setSendMessage(Boolean SendMessage) {
+		this.SendMessage = SendMessage;
+	}
+	
 	private  Set<String> closedNodes;
 	private  HashMap<String,ArrayList<String>> edges;
 	private  String 		key;
+	private  Boolean SendMessage;
 	
 }
