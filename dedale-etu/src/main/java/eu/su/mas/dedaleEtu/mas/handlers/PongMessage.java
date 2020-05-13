@@ -2,6 +2,7 @@ package eu.su.mas.dedaleEtu.mas.handlers;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.AgentInformations;
+import eu.su.mas.dedaleEtu.mas.knowledge.ConversationInformations;
 import eu.su.mas.dedaleEtu.mas.protocol.SynchronizeMessage;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
 import eu.su.mas.dedaleEtu.mas.toolBox.PacketManager;
@@ -29,7 +30,9 @@ public class PongMessage extends OneShotBehaviour{
 		Pair<eu.su.mas.dedaleEtu.mas.protocol.PongMessage,ACLMessage> object = PacketManager.ReceiveByClassName(this.getClass().getSimpleName(), myAgent);
 		
 		if(informations.currentConversation == null) {
-			informations.currentConversation = object.getValue().getSender().getLocalName();
+			informations.currentConversation  =  new ConversationInformations();
+			informations.currentConversation.setAgentName(object.getValue().getSender().getLocalName());
+			informations.currentConversation.setCoalitionId(object.getKey().getCoalitionId());
 		}
 		
 		if(object.getKey().getSynchronize()) {

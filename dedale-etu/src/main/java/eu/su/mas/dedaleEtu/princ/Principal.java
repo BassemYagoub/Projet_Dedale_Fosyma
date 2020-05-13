@@ -10,7 +10,6 @@ import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyMovingAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyTankerAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyWumpusShift;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreMultiAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
 import eu.su.mas.dedale.mas.agents.GateKeeperAgent;
 
 
@@ -464,7 +463,7 @@ public class Principal {
 		Object [] entityParametersExplo4={"aaa"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		ag=createNewDedaleAgent(c, agentName, eu.su.mas.dedaleEtu.mas.agents.dummies.DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
+		ag=createNewDedaleAgent(c, agentName, eu.su.mas.dedaleEtu.mas.agents.dummies.dummies.DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
 		agentList.add(ag);//		
 		
 		/*********

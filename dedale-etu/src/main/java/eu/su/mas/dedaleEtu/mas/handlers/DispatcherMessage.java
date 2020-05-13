@@ -31,6 +31,7 @@ public class DispatcherMessage extends OneShotBehaviour {
 
 
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(PingMessage.class.getSimpleName()));
+		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(ConversationFinishedMessage.class.getSimpleName()));
 		ACLMessage object = myAgent.blockingReceive(null, AgentInformations.DefaultTimeOut);
 		if (object != null) {
 			String sender = object.getSender().getLocalName();

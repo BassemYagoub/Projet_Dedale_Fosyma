@@ -39,12 +39,15 @@ public class SynchronizeMessage extends OneShotBehaviour{
 			message.setSendMessage(false); // pour ne pas recevoir une deuxiéme synchro
 			PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
 
+		}else {
+				
 		}
+			
 		
 		informations.state = AgentState.Dispatcher;
 		//libére la conversation
-		informations.currentConversation = null;
-		System.out.println("agent n = "+this.myAgent.getLocalName() + " nombres closed nodes : " + informations.getClosedNodes().size());
+		//informations.currentConversation = null;
+	//	System.out.println("agent n = "+this.myAgent.getLocalName() + " nombres closed nodes : " + informations.getClosedNodes().size());
 		
 	}
 	

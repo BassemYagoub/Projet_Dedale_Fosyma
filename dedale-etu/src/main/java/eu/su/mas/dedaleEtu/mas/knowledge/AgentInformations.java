@@ -45,8 +45,8 @@ public class AgentInformations implements Serializable {
 	private Set<String> closedNodes;
 	
 	
-	public String currentConversation = null;
-	
+	//public String currentConversation = null;
+	public ConversationInformations currentConversation = null;
 	TreeSet<String> treeKey;	
 	private String customKey;
 	

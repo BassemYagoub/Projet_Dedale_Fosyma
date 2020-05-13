@@ -11,4 +11,11 @@ public class PongMessage implements Serializable{
 		this.synchronize = synchronize;
 	}
 	public Boolean synchronize;
+	public Integer coalitionId;
+	public Integer getCoalitionId() {
+		return coalitionId;
+	}
+	public void setCoalitionId(Integer coalitionId) {
+		this.coalitionId = coalitionId;
+	}
 }

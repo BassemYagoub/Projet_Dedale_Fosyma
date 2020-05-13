@@ -10,7 +10,6 @@ import java.util.Set;
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.AgentInformations;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
@@ -38,6 +37,7 @@ public class SendingPingMessageBehaviour extends OneShotBehaviour {
 	public void action() {
 		PingMessage message = new PingMessage();
 		message.setKey(informations.getAgentKey());
+		message.setCoalitionId(informations.coalitionId);
 		PacketManager.Send(this.myAgent, informations.getReceivers(),message);
 		this.informations.updateCacheReceivers(informations.getReceivers());
 		this.informations.state = AgentState.Dispatcher;
