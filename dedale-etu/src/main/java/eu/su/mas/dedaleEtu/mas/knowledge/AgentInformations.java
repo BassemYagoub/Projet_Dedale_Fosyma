@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
+import eu.su.mas.dedaleEtu.mas.toolBox.CoalitionState;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.FSMBehaviour;
@@ -18,6 +19,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.util.leap.Serializable;
+import javafx.util.Pair;
 
 /**
  * 
@@ -28,12 +30,15 @@ public class AgentInformations implements Serializable {
 
 
 	public static final long  DefaultTimeOut = 500;
+	public static Integer CoalitionId = 0;
+	public static Object lock = new Object();
 	public MapRepresentation myMap;
 	public List<String> openNodes;
 	
 	public HashMap<String,String> agentsKey;
 	// position : List<d'arêtes>
 	private HashMap<String,ArrayList<String>> edges;
+	
 	private ArrayList<String> receivers;
 	
 	public ArrayList<String> AgentKnowing;
@@ -53,9 +58,19 @@ public class AgentInformations implements Serializable {
 	private HashMap<String,Long> cacheMessages = new HashMap<String,Long> ();
 	
 	public Integer coalitionId;
+	public HashMap<String,Pair<CoalitionState,Integer>> members;
+	public String bossName = null;
+	
+	public static CoalitionInformations coalitionInformations = new CoalitionInformations();
 	public Boolean isHunter;
 	public HashMap<String,Behaviour> statsMachine;
 	public Behaviour currentBehaviour;
+	public String nextNode;
+	// les noeuds ou l'agent peut move ( ils sont open ) 
+	public ArrayList<String> nodes ;
+	public String myPosition;
+	public String oldPosition; 
+	public ArrayList<String> nodesAround;
 	// getter 
 	public ArrayList<String> getReceivers(){
 		return this.receivers;
@@ -94,6 +109,7 @@ public class AgentInformations implements Serializable {
 		this.isHunter = false;
 		this.currentBehaviour = null;
 		this.statsMachine = new HashMap<String,Behaviour>();
+		this.members = new HashMap<String,Pair<CoalitionState,Integer>>();
 
 	}
 	
@@ -224,6 +240,22 @@ public class AgentInformations implements Serializable {
 		}else {
 			return -1;
 		}
+	}
+	
+	public void removeCacheMessage(String agent) {
+		if(cacheMessages.containsKey(agent)) {
+			
+			cacheMessages.remove(agent);
+			
+		}
+	}
+	
+	public void clearCacheMessage() {
+		cacheMessages.clear();
+	}
+	
+	public void removeReceiver(String agentName) {
+		this.receivers.remove(agentName);
 	}
 
 }

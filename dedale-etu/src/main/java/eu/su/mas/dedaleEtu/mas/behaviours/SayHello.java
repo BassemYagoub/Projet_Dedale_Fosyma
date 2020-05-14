@@ -25,14 +25,12 @@ public class SayHello extends OneShotBehaviour{
 	 *  
 	 */
 	public SayHello (final Agent myagent) {
-		System.out.println("tttttttttttttttest");
 		//super(myagent);
 	}
 
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
-		System.out.println("test");
 
 	}
 	

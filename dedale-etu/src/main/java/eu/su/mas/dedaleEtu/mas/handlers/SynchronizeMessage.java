@@ -28,7 +28,7 @@ public class SynchronizeMessage extends OneShotBehaviour{
 		// update agent sender key
 		informations.addOrUpdate(object.getValue().getSender().getLocalName(), object.getKey().getKey());
 		informations.mergeInformations(object.getKey().getClosedNodes(),object.getKey().getEdges(),object.getKey().getOpenNodes());
-	
+		System.out.println("synchronize");
 		//pour savoir si en renvoie le sync au sender ou pas
 		if(object.getKey().getSendMessage()) {
 			eu.su.mas.dedaleEtu.mas.protocol.SynchronizeMessage message = new eu.su.mas.dedaleEtu.mas.protocol.SynchronizeMessage();
@@ -38,16 +38,12 @@ public class SynchronizeMessage extends OneShotBehaviour{
 			message.setOpenNodes(informations.openNodes);
 			message.setSendMessage(false); // pour ne pas recevoir une deuxiéme synchro
 			PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
+			informations.state = AgentState.Dispatcher;
 
 		}else {
-				
+			informations.state = AgentState.Coalition;
+
 		}
-			
-		
-		informations.state = AgentState.Dispatcher;
-		//libére la conversation
-		//informations.currentConversation = null;
-	//	System.out.println("agent n = "+this.myAgent.getLocalName() + " nombres closed nodes : " + informations.getClosedNodes().size());
 		
 	}
 	

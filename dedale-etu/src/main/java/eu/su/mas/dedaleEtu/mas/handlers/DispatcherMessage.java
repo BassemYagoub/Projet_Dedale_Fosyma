@@ -1,8 +1,13 @@
 package eu.su.mas.dedaleEtu.mas.handlers;
 
+import java.util.ArrayList;
+
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.AgentInformations;
+import eu.su.mas.dedaleEtu.mas.protocol.AcceptCoalitionMessage;
+import eu.su.mas.dedaleEtu.mas.protocol.MemberMovedMessage;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
+import eu.su.mas.dedaleEtu.mas.toolBox.CoalitionType;
 import eu.su.mas.dedaleEtu.mas.toolBox.PacketManager;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -32,12 +37,17 @@ public class DispatcherMessage extends OneShotBehaviour {
 
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(PingMessage.class.getSimpleName()));
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(ConversationFinishedMessage.class.getSimpleName()));
-		ACLMessage object = myAgent.blockingReceive(null, AgentInformations.DefaultTimeOut);
+		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(CoalitionInvitationMessage.class.getSimpleName()));
+		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(AcceptCoalitionMessage.class.getSimpleName()));
+		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(RequestJoinCoalitionMessage.class.getSimpleName()));
+		//conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(MemberMovedMessage.class.getSimpleName()));
+
+		ACLMessage object = myAgent.blockingReceive(conditions, AgentInformations.DefaultTimeOut);
 		if (object != null) {
 			String sender = object.getSender().getLocalName();
 			String message  = object.getProtocol();
 			// si on est déjà en conversation avec un autre agent et on reçoie un message d'un tout autre agent en push le message et on re attend
-			if (informations.currentConversation != null && !informations.currentConversation.equals(sender)) {
+			if (informations.currentConversation != null && !informations.currentConversation.getAgentName().equals(sender)) {
 				//this.myAgent.putBack(object);
 				informations.state = AgentState.Dispatcher;
 
@@ -47,8 +57,18 @@ public class DispatcherMessage extends OneShotBehaviour {
 			}
 
 		} else {
-			informations.state = AgentState.Exploring;
+			informations.state = AgentState.ExploringDispatch;
 			informations.currentConversation = null;
+			
+			//vider  le cache des messages
+			informations.clearCacheMessage();
+			// l'agent enléve les membres de son groupe dans la liste des receivers
+			if(informations.coalitionId != -1) {
+				ArrayList<Pair<String,CoalitionType>> members = informations.coalitionInformations.get(informations.coalitionId);
+				for(Pair<String,CoalitionType> member : members) {
+					informations.removeReceiver(member.getKey());
+				}
+			}
 		}
 	}
 

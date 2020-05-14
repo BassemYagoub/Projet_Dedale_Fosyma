@@ -426,7 +426,7 @@ public class Principal {
 		ag=createNewDedaleAgent(c, agentName, ExploreMultiAgent.class.getName(), entityParametersExplo3);//ExploreSoloAgent
 		agentList.add(ag);
 		
-		agentName="Explo4";
+	/*	agentName="Explo4";
 		
 		//3) If you want to give specific parameters to your agent, add them here
 
@@ -434,7 +434,7 @@ public class Principal {
 		
 		//4) Give the class name of your agent to let the system instantiate it
 		ag=createNewDedaleAgent(c, agentName, ExploreMultiAgent.class.getName(), entityParametersExplo5);//ExploreSoloAgent
-		agentList.add(ag);
+		agentList.add(ag);*/
 
 		//agent 3 
 		//1) Get the container where the agent will appear

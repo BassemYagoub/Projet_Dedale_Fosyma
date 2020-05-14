@@ -2,6 +2,8 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.view.Viewer;
@@ -17,6 +20,7 @@ import org.graphstream.ui.view.Viewer.CloseFramePolicy;
 
 import dataStructures.serializableGraph.*;
 import javafx.application.Platform;
+import javafx.util.Pair;
 
 /**
  * <pre>
@@ -123,9 +127,47 @@ public class MapRepresentation implements Serializable {
 			shortestPath.add(iter.next().getId());
 		}
 		dijkstra.clear();
-		shortestPath.remove(0);//remove the current position
+	//	shortestPath.remove(0);//remove the current position
+		shortestPath.remove(idFrom);
 		return shortestPath;
 	}
+	
+	public String getNearestNode(String idFrom , String idTo) {
+		
+		ArrayList<Pair<String,Double>> values = new ArrayList<Pair<String,Double>>();
+		
+		Double valueNodeTo =  Double.valueOf(idTo.split("_")[0]) + 
+						(Double.valueOf(idTo.split("_")[1]) / (10 * idTo.split("_")[1].length()));
+		for(Integer i  = 0;i<g.getNodeCount();i++) {
+			String Id = g.getNode(i).getId();
+			String[] split =  g.getNode(i).getId().split("_");
+			Double valueNode = Double.valueOf(split[0]);
+			valueNode  += (Double.valueOf(split[1])) / (10 *split[1].length());
+			values.add(new Pair<String,Double>(g.getNode(i).getId(),Math.abs(valueNode - valueNodeTo)));
+		}
+		
+		// trie
+		Collections.sort(values, new Comparator<Pair<String, Double>>() {
+		    @Override
+		    public int compare(final Pair<String, Double> o1, final Pair<String, Double> o2) {
+		        // TODO: implement your logic here
+		    	if(o1.getValue() <= o2.getValue()) {
+		    		return -1;
+		    	}else {
+		    		return 1;
+		    	}
+		    }
+		});
+		List<String>  path = null;
+		for(Integer i = 0;i<values.size() ; i++) {
+			path = getShortestPath(idFrom,values.get(i).getKey());
+			if(path.size() > 0)
+				break;
+		}
+		return path.get(0);
+	}
+
+	
 
 	/**
 	 * Before the migration we kill all non serializable components and store their data in a serializable form
