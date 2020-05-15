@@ -29,7 +29,7 @@ import javafx.util.Pair;
 public class AgentInformations implements Serializable {
 
 
-	public static final long  DefaultTimeOut = 500;
+	public static final long  DefaultTimeOut = 250;
 	public static Integer CoalitionId = 0;
 	public static Object lock = new Object();
 	public MapRepresentation myMap;
@@ -71,6 +71,7 @@ public class AgentInformations implements Serializable {
 	public String myPosition;
 	public String oldPosition; 
 	public ArrayList<String> nodesAround;
+	public HashMap<String,String> agentsPositions; 
 	// getter 
 	public ArrayList<String> getReceivers(){
 		return this.receivers;
@@ -110,6 +111,7 @@ public class AgentInformations implements Serializable {
 		this.currentBehaviour = null;
 		this.statsMachine = new HashMap<String,Behaviour>();
 		this.members = new HashMap<String,Pair<CoalitionState,Integer>>();
+		this.agentsPositions = new HashMap<String,String>();
 
 	}
 	

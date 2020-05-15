@@ -58,6 +58,9 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 		int index = ThreadLocalRandom.current().nextInt(0, informations.nodes.size());
 
 		((AbstractDedaleAgent) this.myAgent).moveTo(informations.nodes.get(index));
+		
+		//update la current position
+		informations.myPosition  = informations.nodes.get(index);
 		informations.state = AgentState.SendingPing;
 
 	}

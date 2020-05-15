@@ -67,6 +67,9 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 					Pair<eu.su.mas.dedaleEtu.mas.protocol.BossMovedMessage, ACLMessage> obj = PacketManager
 							.ReceiveByClassName(eu.su.mas.dedaleEtu.mas.protocol.BossMovedMessage.class.getSimpleName(),
 									myAgent);
+					for(Map.Entry<String, String> i : obj.getKey().getAgentsPosition().entrySet()) {
+						informations.agentsPositions.put(i.getKey(),i.getValue());
+					}
 					nodesArounds = obj.getKey().getNodes();
 					// informations.nextNode = t
 					canMove = true;
@@ -90,6 +93,10 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 									eu.su.mas.dedaleEtu.mas.protocol.MemberMovedMessage.class.getSimpleName(), myAgent);
 					informations.members.put(obj.getValue().getSender().getLocalName(),
 							new Pair<CoalitionState, Integer>(CoalitionState.Ready, 0));
+					
+					for(Map.Entry<String, String> i : obj.getKey().getAgentsPositions().entrySet()) {
+						informations.agentsPositions.put(i.getKey(),i.getValue());
+					}
 					memberUpdated = true;
 				}
 			}
@@ -101,14 +108,16 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 					// on incrémente le nombre de fois que l'agent n'as pas répondu
 					entry.setValue(
 							new Pair<CoalitionState, Integer>(CoalitionState.Waiting, entry.getValue().getValue() + 1));
-					/*
-					 * // l'agent renvoie le même message BossMoveMessage message = new
-					 * BossMoveMessage(); message.setNewPosition(informations.myPosition);
-					 * informations.nodesAround.remove(informations.myPosition);
-					 * message.setNodes(informations.nodesAround);
-					 * message.setOldPosition(informations.oldPosition);
-					 * PacketManager.Send(this.myAgent, entry.getKey(), message);
-					 */
+					
+					 // l'agent renvoie le même message BossMoveMessage message = new
+					  BossMovedMessage message = new BossMovedMessage();
+					  message.setNewPosition(informations.myPosition);
+					  informations.nodesAround.remove(informations.myPosition);
+					  message.setNodes(informations.nodesAround);
+					  message.setOldPosition(informations.oldPosition);
+					  message.setAgentsPosition(informations.agentsPositions);
+					  PacketManager.Send(this.myAgent, entry.getKey(), message);
+					
 				}
 			}
 			// si l'agent vient de recevoir un message ( memberMovedMessage) et que tous les
@@ -117,12 +126,17 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 			if (!isMemberWaiting && memberUpdated && this.myAgent.getLocalName() != informations.bossName) {
 				System.out.println(myAgent.getLocalName() + "Send Move message to his boss  : "+informations.bossName);
 				MemberMovedMessage message = new MemberMovedMessage();
+				message.setAgentsPositions(informations.agentsPositions);
 				PacketManager.Send(this.myAgent, informations.bossName, message);
 			} else {
 				// si on attend aucun membre alors
 				if (!isMemberWaiting) {
 					// si le chef à pu bouger du coup l'agent envoie un msg à tous les autres agents
 					Integer tryMove = 0;
+					//Integer size = nodesArounds.size();
+					if(nodesArounds.size() <= 0) {
+						nodesArounds = informations.nodesAround;
+					}
 					int index = ThreadLocalRandom.current().nextInt(0, nodesArounds.size());
 
 					nextNode = nodesArounds.get(index);
@@ -130,7 +144,8 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 					// nextNode).get(0);
 					nextNode = informations.myMap.getNearestNode(informations.myPosition, nextNode);
 					Boolean isMoved = ((AbstractDedaleAgent) this.myAgent).moveTo(nextNode);
-					while (tryMove++ <= 3) {
+					Integer maxTry   = 3;
+					while (tryMove++ <= maxTry) {
 						System.out.println("agent : " + myAgent.getLocalName() + "Boss : " + informations.bossName
 								+ " try move : " + tryMove);
 						if (isMoved) {
@@ -139,6 +154,7 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 							// si on est chef de aucun membre l'agent notifie son boss
 							if (informations.members.size() <= 0) {
 								MemberMovedMessage message = new MemberMovedMessage();
+								message.setAgentsPositions(informations.agentsPositions);
 								PacketManager.Send(this.myAgent, informations.bossName, message);
 
 							} else {
@@ -148,9 +164,11 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 									BossMovedMessage message = new BossMovedMessage();
 									message.setNewPosition(nextNode);
 									// en supprime des noeuds pour que d'autre agent ne tente pas d'y accéder
-									informations.nodesAround.remove(nextNode);
-									message.setNodes(informations.nodesAround);
+									nodesArounds.remove(nextNode);
+									message.setNodes(nodesArounds);
 									message.setOldPosition(informations.myPosition);
+									informations.agentsPositions.put(myAgent.getLocalName(),nextNode);
+									message.setAgentsPosition(informations.agentsPositions);
 									PacketManager.Send(this.myAgent, entry.getKey(), message);
 									entry.setValue(new Pair<CoalitionState, Integer>(CoalitionState.Waiting, 0));
 								}
@@ -165,13 +183,17 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 						}
 
 					}
+					
+					if(tryMove > maxTry) {
+						
+					}
 				}
 			}
 
 		}
 		informations.state = AgentState.Dispatcher;
 
-	}
+	};
 
 	public int onEnd() {
 		return informations.state.ordinal();

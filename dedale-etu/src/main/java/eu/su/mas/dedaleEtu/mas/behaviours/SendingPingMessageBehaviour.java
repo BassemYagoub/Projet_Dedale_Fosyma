@@ -38,6 +38,7 @@ public class SendingPingMessageBehaviour extends OneShotBehaviour {
 		PingMessage message = new PingMessage();
 		message.setKey(informations.getAgentKey());
 		message.setCoalitionId(informations.coalitionId);
+		message.setPosition(informations.myPosition);
 		PacketManager.Send(this.myAgent, informations.getReceivers(),message);
 		this.informations.updateCacheReceivers(informations.getReceivers());
 		this.informations.state = AgentState.Dispatcher;

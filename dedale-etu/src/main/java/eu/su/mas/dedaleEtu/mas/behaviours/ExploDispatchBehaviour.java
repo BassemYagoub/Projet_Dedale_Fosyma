@@ -46,7 +46,7 @@ public class ExploDispatchBehaviour  extends OneShotBehaviour{
 				}
 			}
 			try {
-				this.myAgent.doWait(500);
+				//this.myAgent.doWait(500);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -63,7 +63,7 @@ public class ExploDispatchBehaviour  extends OneShotBehaviour{
 			Iterator<Couple<String, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
 			informations.nodes = new ArrayList<String>();
 			informations.nodesAround = new ArrayList<String>();
-			informations.nodesAround.add(informations.myPosition);
+			//informations.nodesAround.add(informations.myPosition);
 
 			while(iter.hasNext()){
 				String nodeId=iter.next().getLeft();
@@ -78,6 +78,7 @@ public class ExploDispatchBehaviour  extends OneShotBehaviour{
 					informations.nodes.add(nodeId);
 					if (informations.nextNode==null) informations.nextNode=nodeId;
 				}
+				
 			}
 		}
 			
