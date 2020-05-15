@@ -70,8 +70,9 @@ public class AgentInformations implements Serializable {
 	public ArrayList<String> nodes ;
 	public String myPosition;
 	public String oldPosition; 
-	public ArrayList<String> nodesAround;
-	public HashMap<String,String> agentsPositions; 
+	// agent , position / heure modification 
+	public HashMap<String,Pair<String,Long>> agentsPositions; 
+	public String agentName  = "";
 	// getter 
 	public ArrayList<String> getReceivers(){
 		return this.receivers;
@@ -111,7 +112,8 @@ public class AgentInformations implements Serializable {
 		this.currentBehaviour = null;
 		this.statsMachine = new HashMap<String,Behaviour>();
 		this.members = new HashMap<String,Pair<CoalitionState,Integer>>();
-		this.agentsPositions = new HashMap<String,String>();
+		this.agentsPositions = new HashMap<String,Pair<String,Long>>();
+		
 
 	}
 	

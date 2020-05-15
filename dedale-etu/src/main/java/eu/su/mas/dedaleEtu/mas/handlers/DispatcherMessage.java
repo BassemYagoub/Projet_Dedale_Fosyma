@@ -41,7 +41,10 @@ public class DispatcherMessage extends OneShotBehaviour {
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(AcceptCoalitionMessage.class.getSimpleName()));
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(RequestJoinCoalitionMessage.class.getSimpleName()));
 		//conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(MemberMovedMessage.class.getSimpleName()));
+		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(CanMoveNearMessage.class.getSimpleName()));
+		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(SynchronizeGroupMessage.class.getSimpleName()));
 
+		
 		ACLMessage object = myAgent.blockingReceive(conditions, AgentInformations.DefaultTimeOut);
 		if (object != null) {
 			String sender = object.getSender().getLocalName();

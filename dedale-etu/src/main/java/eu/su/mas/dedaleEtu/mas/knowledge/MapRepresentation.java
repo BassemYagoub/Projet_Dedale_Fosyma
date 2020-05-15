@@ -132,7 +132,7 @@ public class MapRepresentation implements Serializable {
 		return shortestPath;
 	}
 	
-	public String getNearestNode(String idFrom , String idTo) {
+	public String getNearestNode(String idFrom , String idTo , ArrayList<Pair<String,Long>> conditions) {
 		
 		ArrayList<Pair<String,Double>> values = new ArrayList<Pair<String,Double>>();
 		
@@ -151,18 +151,33 @@ public class MapRepresentation implements Serializable {
 		    @Override
 		    public int compare(final Pair<String, Double> o1, final Pair<String, Double> o2) {
 		        // TODO: implement your logic here
-		    	if(o1.getValue() <= o2.getValue()) {
+		    	if(o1.getValue() < o2.getValue()) {
 		    		return -1;
 		    	}else {
-		    		return 1;
+		    		if(o1.getValue() > o2.getValue())
+		    			return 1;
+		    		else
+		    			return 0;
 		    	}
 		    }
 		});
 		List<String>  path = null;
 		for(Integer i = 0;i<values.size() ; i++) {
 			path = getShortestPath(idFrom,values.get(i).getKey());
-			if(path.size() > 0)
-				break;
+			
+			if(path.size() > 0) {
+				//!conditions.contains(path.get(0))
+				Boolean state = false;
+				for(Pair<String,Long> iterator : conditions) {
+					if(iterator.getKey() == path.get(0)) {
+						state = true;
+						break;
+					}
+				}
+				
+				if(!state)
+					break;
+			}
 		}
 		return path.get(0);
 	}

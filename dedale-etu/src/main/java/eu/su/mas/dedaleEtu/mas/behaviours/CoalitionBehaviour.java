@@ -19,6 +19,7 @@ public class CoalitionBehaviour extends OneShotBehaviour {
 	
 	@Override
 	public void action() {
+		this.informations.agentName = this.myAgent.getLocalName();
 		// TODO Auto-generated method stub
 		if(informations.coalitionId  != -1) {
 			if(informations.currentConversation.getCoalitionId() != -1) { // ça sert   à rien de s'inviter chacun à son groupe

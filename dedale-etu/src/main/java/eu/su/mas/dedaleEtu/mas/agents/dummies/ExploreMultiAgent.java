@@ -16,6 +16,7 @@ import eu.su.mas.dedaleEtu.mas.behaviours.SayHello;
 import eu.su.mas.dedaleEtu.mas.behaviours.SendingEndConversationBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.SendingPingMessageBehaviour;
 import eu.su.mas.dedaleEtu.mas.handlers.AcceptCoalitionMessage;
+import eu.su.mas.dedaleEtu.mas.handlers.CanMoveNearMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.CoalitionInvitationMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.ConversationFinishedMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.DispatcherMessage;
@@ -23,6 +24,7 @@ import eu.su.mas.dedaleEtu.mas.handlers.IsBusyMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.PingMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.PongMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.RequestJoinCoalitionMessage;
+import eu.su.mas.dedaleEtu.mas.handlers.SynchronizeGroupMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.SynchronizeMessage;
 import eu.su.mas.dedaleEtu.mas.knowledge.AgentInformations;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
@@ -85,7 +87,10 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		exploration.registerState(new CoalitionInvitationMessage(this,informations), "HandlerCoalitionInvitationMessage");
 		exploration.registerState(new ConversationFinishedMessage(this,informations), "HandlerConversationFinishedMessage");
 		exploration.registerState(new RequestJoinCoalitionMessage(this,informations), "HandlerRequestJoinCoalitionMessage");
+		exploration.registerState(new CanMoveNearMessage(this,informations), "HandlerCanMoveNearMessage");
+		exploration.registerState(new SynchronizeGroupMessage(this,informations), "HandlerSynchronizeGroupMessage");
 
+		
 		
 		exploration.registerTransition("ExploringDispatch","Exploring",AgentState.Exploring.ordinal()); 
 		exploration.registerTransition("ExploringDispatch","ExploringCoalition",AgentState.ExploringCoalition.ordinal()); 
@@ -107,8 +112,10 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		exploration.registerTransition("Dispatcher","HandlerCoalitionInvitationMessage",AgentState.HandlerCoalitionInvitationMessage.ordinal()); 
 		exploration.registerTransition("Dispatcher","HandlerConversationFinishedMessage",AgentState.HandlerConversationFinishedMessage.ordinal()); 
 		exploration.registerTransition("Dispatcher","HandlerRequestJoinCoalitionMessage",AgentState.HandlerRequestJoinCoalitionMessage.ordinal()); 
-
 		
+		exploration.registerTransition("Dispatcher","HandlerSynchronizeGroupMessage",AgentState.HandlerSynchronizeGroupMessage.ordinal()); 
+		exploration.registerTransition("Dispatcher","HandlerCanMoveNearMessage",AgentState.HandlerCanMoveNearMessage.ordinal()); 
+
 		exploration.registerTransition("HandlerPingMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerPongMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerSynchronizeMessage","Redirect",AgentState.Redirect.ordinal()); 		
@@ -118,6 +125,8 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		exploration.registerTransition("HandlerCoalitionInvitationMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerConversationFinishedMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerRequestJoinCoalitionMessage","Redirect",AgentState.Redirect.ordinal()); 		
+		exploration.registerTransition("HandlerCanMoveNearMessage","Redirect",AgentState.Redirect.ordinal()); 		
+		exploration.registerTransition("HandlerSynchronizeGroupMessage","Redirect",AgentState.Redirect.ordinal()); 		
 
 		
 		exploration.registerTransition("Redirect","Dispatcher",AgentState.Dispatcher.ordinal()); 		

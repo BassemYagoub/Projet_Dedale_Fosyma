@@ -45,7 +45,7 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 
-		if (this.informations.openNodes.size() > 0) {
+		/*if (this.informations.openNodes.size() > 0) {
 			if (informations.nextNode == null) {
 				// update we need random here
 
@@ -53,7 +53,7 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 						.getShortestPath(informations.myPosition, this.informations.openNodes.get(0)).get(0);
 				informations.nodes.add(informations.nextNode);
 			}
-		}
+		}*/
 
 		int index = ThreadLocalRandom.current().nextInt(0, informations.nodes.size());
 
@@ -61,6 +61,8 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 		
 		//update la current position
 		informations.myPosition  = informations.nodes.get(index);
+		informations.agentsPositions.put(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
+
 		informations.state = AgentState.SendingPing;
 
 	}
