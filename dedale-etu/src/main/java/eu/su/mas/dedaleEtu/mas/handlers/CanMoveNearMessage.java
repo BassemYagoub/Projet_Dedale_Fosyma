@@ -1,5 +1,6 @@
-package eu.su.mas.dedaleEtu.mas.handlers;
+package eu.su.mas.dedaleEtu.mas.handlers;	
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,33 +31,80 @@ public class CanMoveNearMessage extends OneShotBehaviour {
 				.ReceiveByClassName(this.getClass().getSimpleName(), myAgent);
 
 		// si c'est l'agent avec la position que on doit bouger alors on bouge
-		if (object.getKey().getPosition() == this.informations.myPosition) {
+		if (object.getKey().getPosition().equals(this.informations.myPosition)) {
 			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent)
 					.observe();
 			Iterator<Couple<String, List<Couple<Observation, Integer>>>> iter = lobs.iterator();
+			Boolean isMoved = false;
+			String nodeId = "";
+			ArrayList<String> blockedPositions = new ArrayList<String>();
 			while (iter.hasNext()) {
-				String nodeId = iter.next().getLeft();
-				if (((AbstractDedaleAgent) this.myAgent).moveTo(nodeId)) {
-					informations.myPosition = nodeId;
+				nodeId = iter.next().getLeft();
+				if(nodeId == informations.myPosition)
+					continue;
+				isMoved = ((AbstractDedaleAgent) this.myAgent).moveTo(nodeId);
+				if (isMoved) {
 					break;
+				}else {
+					blockedPositions.add(nodeId);
 				}
 			}
+			
+			if(isMoved) {
+				informations.myPosition = nodeId;
 
-			informations.agentsPositions.put(myAgent.getLocalName(), new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
-			MemberMovedMessage message = new MemberMovedMessage();
-			message.setAgentsPositions(informations.agentsPositions);
-			PacketManager.Send(this.myAgent, informations.bossName, message);
+				informations.addOrUpdateAgentPosition(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
+				
+				if(myAgent.getLocalName() == informations.bossName)
+					return;
+				MemberMovedMessage message = new MemberMovedMessage();
+				message.setClosedNodes(informations.getClosedNodes());
+				message.setKey(informations.getAgentKey());
+				message.setEdges(informations.getEdges());
+				message.setOpenNodes(informations.openNodes);
+				message.setAgentsPositions(informations.agentsPosition);
+				PacketManager.Send(this.myAgent, informations.bossName, message);
+			}else {
+				informations.addOrUpdateAgentPosition(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
+				if(myAgent.getLocalName() == informations.bossName)
+					return;
+				if(informations.members.size() <= 0) {
+					MemberMovedMessage message = new MemberMovedMessage();
+					informations.addOrUpdateAgentPosition(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
+					message.setAgentsPositions(informations.agentsPosition);
+					message.setBlockedPositions(blockedPositions);
+					PacketManager.Send(this.myAgent, informations.bossName, message);
+				}else {
+					for (Map.Entry<String, Pair<CoalitionState, Integer>> iterator : informations.members
+							.entrySet()) {
+						eu.su.mas.dedaleEtu.mas.protocol.CanMoveNearMessage message = new eu.su.mas.dedaleEtu.mas.protocol.CanMoveNearMessage();
+						message.setPosition(informations.agentsPosition.get(iterator.getKey()).getKey());
+						
+						PacketManager.Send(this.myAgent, iterator.getKey(), message);
+						informations.members.put(iterator.getKey(),
+								new Pair<CoalitionState, Integer>(CoalitionState.Waiting, 0));
+					}
+				}
+
+			}
+			
 		} else {
 			if (informations.members.size() <= 0) {
 				
 				MemberMovedMessage message = new MemberMovedMessage();
-				message.setAgentsPositions(informations.agentsPositions);
+				informations.addOrUpdateAgentPosition(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
+				message.setAgentsPositions(informations.agentsPosition);
 				PacketManager.Send(this.myAgent, informations.bossName, message);
+				if(myAgent.getLocalName() == informations.bossName)
+					return;
 			} else {
+				if(myAgent.getLocalName() == informations.bossName)
+					return;
 				// sinon on broadcast
 				for (Map.Entry<String, Pair<CoalitionState, Integer>> iterator : informations.members.entrySet()) {
 					eu.su.mas.dedaleEtu.mas.protocol.CanMoveNearMessage message = new eu.su.mas.dedaleEtu.mas.protocol.CanMoveNearMessage();
 					message.setPosition(object.getKey().getPosition());
+					message.setAgentsPositions(informations.agentsPosition);
 					PacketManager.Send(this.myAgent, iterator.getKey(), message);
 					informations.members.put(iterator.getKey(),
 							new Pair<CoalitionState, Integer>(CoalitionState.Waiting, 0));

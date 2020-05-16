@@ -32,7 +32,7 @@ public class AcceptCoalitionMessage extends OneShotBehaviour{
 		message.setKey(informations.getAgentKey());
 		message.setEdges(informations.getEdges());
 		message.setOpenNodes(informations.openNodes);
-		message.setAgentsPositions(informations.agentsPositions);
+		message.setAgentsPositions(informations.agentsPosition);
 		PacketManager.Send(myAgent, object.getValue().getSender().getLocalName(), message,myAgent.getLocalName());
 
 	}

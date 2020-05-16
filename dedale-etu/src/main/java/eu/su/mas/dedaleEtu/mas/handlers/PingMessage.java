@@ -30,7 +30,8 @@ public class PingMessage extends OneShotBehaviour{
 	public void action() {
 
 		Pair<eu.su.mas.dedaleEtu.mas.protocol.PingMessage,ACLMessage> object = PacketManager.ReceiveByClassName(this.getClass().getSimpleName(), myAgent);
-		informations.agentsPositions.put(object.getValue().getSender().getLocalName(),new Pair<String,Long>(object.getKey().getPosition(),System.currentTimeMillis()));
+		informations.addOrUpdateAgentPosition(object.getValue().getSender().getLocalName(),new Pair<String,Long>(object.getKey().getPosition(),System.currentTimeMillis()));
+
 		PongMessage message  = new PongMessage();
 		//wasn't same key
 		//if(!informations.addOrUpdate(object.getValue().getSender().getLocalName(), object.getKey().getKey())) {

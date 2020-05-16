@@ -9,7 +9,7 @@ import jade.util.leap.Serializable;
 
 public class SynchronizeMessage implements Serializable{
 	
-	public Set<String> getClosedNodes() {
+	public ArrayList<String> getClosedNodes() {
 		return closedNodes;
 	}
 
@@ -21,7 +21,7 @@ public class SynchronizeMessage implements Serializable{
 		this.key = key;
 	}
 
-	public void setClosedNodes(Set<String> closedNodes) {
+	public void setClosedNodes(ArrayList<String> closedNodes) {
 		this.closedNodes = closedNodes;
 	}
 
@@ -51,7 +51,7 @@ public class SynchronizeMessage implements Serializable{
 		this.SendMessage = SendMessage;
 	}
 	
-	private  Set<String> closedNodes;
+	private  ArrayList<String> closedNodes;
 	private  HashMap<String,ArrayList<String>> edges;
 	private  String 		key;
 	private  Boolean SendMessage;

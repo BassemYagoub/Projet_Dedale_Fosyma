@@ -61,7 +61,7 @@ public class ExploMultiBehaviour extends OneShotBehaviour {
 		
 		//update la current position
 		informations.myPosition  = informations.nodes.get(index);
-		informations.agentsPositions.put(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
+		informations.addOrUpdateAgentPosition(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
 
 		informations.state = AgentState.SendingPing;
 

@@ -5,12 +5,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.toolBox.AgentState;
 import eu.su.mas.dedaleEtu.mas.toolBox.CoalitionState;
+import eu.su.mas.dedaleEtu.mas.toolBox.PacketManager;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.FSMBehaviour;
@@ -18,6 +20,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
 import jade.util.leap.Serializable;
 import javafx.util.Pair;
 
@@ -29,7 +32,7 @@ import javafx.util.Pair;
 public class AgentInformations implements Serializable {
 
 
-	public static final long  DefaultTimeOut = 250;
+	public static final long  DefaultTimeOut = 300;
 	public static Integer CoalitionId = 0;
 	public static Object lock = new Object();
 	public MapRepresentation myMap;
@@ -47,7 +50,7 @@ public class AgentInformations implements Serializable {
 	public AgentState state =  AgentState.Exploring;
 
 	// todo : refactor after (encapsulate in 1 class  and create own method) 
-	private Set<String> closedNodes;
+	private ArrayList<String> closedNodes;
 	
 	
 	//public String currentConversation = null;
@@ -71,8 +74,11 @@ public class AgentInformations implements Serializable {
 	public String myPosition;
 	public String oldPosition; 
 	// agent , position / heure modification 
-	public HashMap<String,Pair<String,Long>> agentsPositions; 
+	public HashMap<String,Pair<String,Long>> agentsPosition; 
 	public String agentName  = "";
+	public ArrayList<String> nearNodes;
+	public ArrayList<ACLMessage> messages = new ArrayList<ACLMessage> ();
+	public Integer numberReceiveBossMessage = 0;
 	// getter 
 	public ArrayList<String> getReceivers(){
 		return this.receivers;
@@ -86,7 +92,7 @@ public class AgentInformations implements Serializable {
 		return customKey;
 	}
 	
-	public Set<String> getClosedNodes() {
+	public ArrayList<String> getClosedNodes() {
 		return closedNodes;
 	}
 	
@@ -100,7 +106,7 @@ public class AgentInformations implements Serializable {
 	
 	public AgentInformations(ArrayList<String> receivers) {
 		this.openNodes = new ArrayList<String>();
-		this.closedNodes = new HashSet<String>();
+		this.closedNodes = new ArrayList<String>();
 		this.agentsKey = new HashMap<String,String>();
 		this.receivers = receivers;
 		this.treeKey =new TreeSet<String>();
@@ -112,7 +118,8 @@ public class AgentInformations implements Serializable {
 		this.currentBehaviour = null;
 		this.statsMachine = new HashMap<String,Behaviour>();
 		this.members = new HashMap<String,Pair<CoalitionState,Integer>>();
-		this.agentsPositions = new HashMap<String,Pair<String,Long>>();
+		this.agentsPosition = new HashMap<String,Pair<String,Long>>();
+		
 		
 
 	}
@@ -132,7 +139,9 @@ public class AgentInformations implements Serializable {
 		
 	}
 	
-	public void mergeInformations(Set<String> _closedNodes , HashMap<String,ArrayList<String>> edges , List<String> _openNodes) {
+	public void mergeInformations(ArrayList<String> _closedNodes , HashMap<String,ArrayList<String>> edges , List<String> _openNodes) {
+		if(_closedNodes == null)
+			return;
 		for (String node : _closedNodes){
 			   if (!this.closedNodes.contains(node)) {
 				  // add closed nodes
@@ -150,6 +159,11 @@ public class AgentInformations implements Serializable {
 			   }
 			}
 		
+		for(Map.Entry<String, ArrayList<String>> edge : edges.entrySet()) {
+			for(String node : edge.getValue()) {
+				   this.myMap.addEdge(node, edge.getKey());
+			   }
+		   }
 		for(String node : _openNodes) {
 		   if (!this.openNodes.contains(node)) {
 			   this.openNodes.add(node);
@@ -160,7 +174,8 @@ public class AgentInformations implements Serializable {
 	 * if the key isn't the same then we change and return false
 	 */
 	public Boolean addOrUpdate(String agentName , String Key) {
-		
+		if(agentName == null)
+			return false;
 		if(agentsKey.containsKey(agentName)) {
 			if(agentsKey.get(agentName)== Key) {
 				return true;
@@ -260,6 +275,24 @@ public class AgentInformations implements Serializable {
 	
 	public void removeReceiver(String agentName) {
 		this.receivers.remove(agentName);
+	}
+	
+	public void addOrUpdateAgentPosition(String name , Pair<String,Long> position) {
+		if(agentsPosition.containsKey(name)) {
+			if(agentsPosition.get(name).getValue() < position.getValue()) { // ça veut dire que notre information est plus nouvelle
+				// du coup on update
+				agentsPosition.put(name,position);
+			}
+		}else {
+			agentsPosition.put(name,position);
+		}
+	}
+	
+	public void addOrUpdateAgentPosition(HashMap<String,Pair<String,Long>> agents) {
+		
+		for (Map.Entry<String, Pair<String, Long>> iterator : agents.entrySet()) {
+			this.addOrUpdateAgentPosition(iterator.getKey(),iterator.getValue());
+		}
 	}
 
 }

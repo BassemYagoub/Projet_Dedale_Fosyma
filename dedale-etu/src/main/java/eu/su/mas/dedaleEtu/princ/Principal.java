@@ -453,7 +453,7 @@ public class Principal {
 		
 		agentList.add(ag);*/
 		
-	/*	c = containerList.get(ConfigurationFile.LOCAL_CONTAINER2_NAME);
+		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER2_NAME);
 		Assert.assertNotNull("This container does not exist",c);
 		
 		//2) Give the name of your agent, MUST be the same as the one given in the entities file.
@@ -463,8 +463,8 @@ public class Principal {
 		Object [] entityParametersExplo4={"aaa"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		ag=createNewDedaleAgent(c, agentName, eu.su.mas.dedaleEtu.mas.agents.dummies.dummies.DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
-		agentList.add(ag);*///		
+		//ag=createNewDedaleAgent(c, agentName, eu.su.mas.dedaleEtu.mas.agents.dummies.dummies.DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
+		//agentList.add(ag);	
 		
 		/*********
 		 * GOLEM

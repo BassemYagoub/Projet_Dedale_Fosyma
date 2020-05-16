@@ -27,10 +27,10 @@ public class SynchronizeGroupMessage extends OneShotBehaviour {
 		informations.addOrUpdate(object.getValue().getSender().getLocalName(), object.getKey().getKey());
 		informations.mergeInformations(object.getKey().getClosedNodes(),object.getKey().getEdges(),object.getKey().getOpenNodes());
 		
-		for (Map.Entry<String, Pair<String,Long>> i : object.getKey().getAgentsPositions().entrySet()) {
+	/*	for (Map.Entry<String, Pair<String,Long>> i : object.getKey().getAgentsPositions().entrySet()) {
 			informations.agentsPositions.put(i.getKey(), i.getValue());
 		}
-		
+		*/
 		informations.state = AgentState.Dispatcher;
 
 

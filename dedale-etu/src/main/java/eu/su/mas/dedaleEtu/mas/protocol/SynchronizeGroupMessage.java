@@ -10,7 +10,7 @@ import jade.util.leap.Serializable;
 import javafx.util.Pair;
 
 public class SynchronizeGroupMessage implements Serializable {
-	public Set<String> getClosedNodes() {
+	public ArrayList<String> getClosedNodes() {
 		return closedNodes;
 	}
 
@@ -22,7 +22,7 @@ public class SynchronizeGroupMessage implements Serializable {
 		this.key = key;
 	}
 
-	public void setClosedNodes(Set<String> closedNodes) {
+	public void setClosedNodes(ArrayList<String> closedNodes) {
 		this.closedNodes = closedNodes;
 	}
 
@@ -61,7 +61,7 @@ public class SynchronizeGroupMessage implements Serializable {
 		this.agentsPositions = agentsPositions;
 	}
 
-	private  Set<String> closedNodes;
+	private  ArrayList<String> closedNodes;
 	private  HashMap<String,ArrayList<String>> edges;
 	private  String 		key;
 	private  Boolean SendMessage;

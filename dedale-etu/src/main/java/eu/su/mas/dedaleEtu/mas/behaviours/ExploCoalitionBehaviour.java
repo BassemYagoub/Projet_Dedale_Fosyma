@@ -1,9 +1,13 @@
 package eu.su.mas.dedaleEtu.mas.behaviours;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import dataStructures.tuple.Couple;
+import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.handlers.IsBusyMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.PongMessage;
@@ -33,23 +37,15 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 		Boolean canMove = false;
 		String nextNode = null;
 		ArrayList<String> nodesArounds = null;
+		for(ACLMessage message : informations.messages) {
+			this.myAgent.putBack(message);
+		}
+		
+		informations.messages.clear();
 		if (this.informations.bossName == this.myAgent.getLocalName()) {
 			canMove = true;
-			/*
-			 * if (this.informations.openNodes.size() > 0) { if (informations.nextNode ==
-			 * null) { // update we need random here
-			 * 
-			 * informations.nextNode = this.informations.myMap
-			 * .getShortestPath(informations.myPosition,
-			 * this.informations.openNodes.get(0)).get(0);
-			 * informations.nodes.add(informations.nextNode); } }
-			 */
-			// revoir
 			nodesArounds = informations.nodes;
 
-			// int index = ThreadLocalRandom.current().nextInt(0,
-			// informations.nodes.size());
-			// nextNode = informations.nodes.get(index);
 		} else {
 			// en vérifie si l'agent à déjà envoyer un message au autre agent si ce'st le
 			// cas pas besoin d'attendre
@@ -70,9 +66,10 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 					Pair<eu.su.mas.dedaleEtu.mas.protocol.BossMovedMessage, ACLMessage> obj = PacketManager
 							.ReceiveByClassName(eu.su.mas.dedaleEtu.mas.protocol.BossMovedMessage.class.getSimpleName(),
 									myAgent);
-					for (Map.Entry<String, Pair<String,Long>> i : obj.getKey().getAgentsPosition().entrySet()) {
-						informations.agentsPositions.put(i.getKey(), new Pair<String,Long>(i.getValue().getKey(),i.getValue().getValue()));
-					}
+
+					informations.addOrUpdateAgentPosition(obj.getKey().getAgentsPosition());
+					informations.addOrUpdate(obj.getValue().getSender().getLocalName(), obj.getKey().getKey());
+					informations.mergeInformations(obj.getKey().getClosedNodes(),obj.getKey().getEdges(),obj.getKey().getOpenNodes());
 					nodesArounds = obj.getKey().getNodes();
 					// informations.nextNode = t
 					canMove = true;
@@ -84,24 +81,35 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 		if (canMove) {
 			Boolean isMemberWaiting = false;
 			Boolean memberUpdated = false;
+			ArrayList<String> blockedPositions = new ArrayList<String>();
 			// boucle d'attente de recpection du Member movedMessage
 			for (Map.Entry<String, Pair<CoalitionState, Integer>> entry : informations.members.entrySet()) {
-				MessageTemplate condition = MessageTemplate.MatchProtocol(MemberMovedMessage.class.getSimpleName());
-				ACLMessage object = myAgent.blockingReceive(condition, AgentInformations.DefaultTimeOut);
+				if (entry.getValue().getKey() == CoalitionState.Waiting) {
+					MessageTemplate condition = MessageTemplate.MatchProtocol(MemberMovedMessage.class.getSimpleName());
+					ACLMessage object = myAgent.blockingReceive(condition, AgentInformations.DefaultTimeOut);
 
-				if (object != null) {
-					this.myAgent.putBack(object); // put first
-					Pair<eu.su.mas.dedaleEtu.mas.protocol.MemberMovedMessage, ACLMessage> obj = PacketManager
-							.ReceiveByClassName(
-									eu.su.mas.dedaleEtu.mas.protocol.MemberMovedMessage.class.getSimpleName(), myAgent);
-					informations.members.put(obj.getValue().getSender().getLocalName(),
-							new Pair<CoalitionState, Integer>(CoalitionState.Ready, 0));
+					if (object != null) {
+						this.myAgent.putBack(object); // put first
+						Pair<eu.su.mas.dedaleEtu.mas.protocol.MemberMovedMessage, ACLMessage> obj = PacketManager
+								.ReceiveByClassName(
+										eu.su.mas.dedaleEtu.mas.protocol.MemberMovedMessage.class.getSimpleName(),
+										myAgent);
+						
+						if(obj.getKey().getBlockedPositions() != null) {
+							for(int j = 0 ;j<obj.getKey().getBlockedPositions().size() ;j++)
+								blockedPositions.add(obj.getKey().getBlockedPositions().get(j));
+						}
+						informations.members.put(obj.getValue().getSender().getLocalName(),
+								new Pair<CoalitionState, Integer>(CoalitionState.Ready, 0));
 
-					for (Map.Entry<String, Pair<String,Long>> i : obj.getKey().getAgentsPositions().entrySet()) {
-						informations.agentsPositions.put(i.getKey(), i.getValue());
+						informations.addOrUpdateAgentPosition(obj.getKey().getAgentsPositions());
+
+						informations.addOrUpdate(obj.getValue().getSender().getLocalName(), obj.getKey().getKey());
+						informations.mergeInformations(obj.getKey().getClosedNodes(),obj.getKey().getEdges(),obj.getKey().getOpenNodes());
+						memberUpdated = true;
 					}
-					memberUpdated = true;
 				}
+
 			}
 			// on vérifie ici si l'agent attend encore un des membres du groupe alors en
 			// renvoie un message
@@ -112,16 +120,16 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 					entry.setValue(
 							new Pair<CoalitionState, Integer>(CoalitionState.Waiting, entry.getValue().getValue() + 1));
 
-					// l'agent renvoie le même message BossMoveMessage message = new
-					/*
-					 * BossMovedMessage message = new BossMovedMessage();
-					 * message.setNewPosition(informations.myPosition);
-					 * informations.nodesAround.remove(informations.myPosition);
-					 * message.setNodes(informations.nodesAround);
-					 * message.setOldPosition(informations.oldPosition);
-					 * message.setAgentsPosition(informations.agentsPositions);
-					 * PacketManager.Send(this.myAgent, entry.getKey(), message);
-					 */
+					// l'agent renvoie le même message 
+						BossMovedMessage message = new BossMovedMessage();
+						message.setNewPosition(informations.myPosition);
+						// en supprime des noeuds pour que d'autre agent ne tente pas d'y accéder
+						message.setNodes(nodesArounds);
+						message.setOldPosition(informations.myPosition);
+		
+						message.setAgentsPosition(informations.agentsPosition);
+						PacketManager.Send(this.myAgent, entry.getKey(), message);
+					 
 
 				}
 			}
@@ -132,8 +140,9 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 				System.out
 						.println(myAgent.getLocalName() + "Send Move message to his boss  : " + informations.bossName);
 				MemberMovedMessage message = new MemberMovedMessage();
-				informations.agentsPositions.put(myAgent.getLocalName(), new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
-				message.setAgentsPositions(informations.agentsPositions);
+//
+				message.setBlockedPositions(blockedPositions);
+				message.setAgentsPositions(informations.agentsPosition);
 				PacketManager.Send(this.myAgent, informations.bossName, message);
 			} else {
 				// si on attend aucun membre alors
@@ -146,10 +155,9 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 
 					// int index = ThreadLocalRandom.current().nextInt(0, nodesArounds.size());
 					Integer tryMove = 0;
-					informations.agentsPositions.remove(this.informations.myPosition);
 					nextNode = nodesArounds.get(tryMove);
 					nextNode = informations.myMap.getNearestNode(informations.myPosition, nextNode,
-							new ArrayList<Pair<String,Long>>(informations.agentsPositions.values()));
+							new ArrayList<Pair<String, Long>>(informations.agentsPosition.values()));
 					Boolean isMoved = ((AbstractDedaleAgent) this.myAgent).moveTo(nextNode);
 					while (tryMove++ < nodesArounds.size()) {
 						System.out.println("agent : " + myAgent.getLocalName() + "Boss : " + informations.bossName
@@ -160,8 +168,13 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 							// si on est chef de aucun membre l'agent notifie son boss
 							if (informations.members.size() <= 0) {
 								MemberMovedMessage message = new MemberMovedMessage();
-								informations.agentsPositions.put(myAgent.getLocalName(), new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
-								message.setAgentsPositions(informations.agentsPositions);
+								informations.addOrUpdateAgentPosition(myAgent.getLocalName(),
+										new Pair<String, Long>(informations.myPosition, System.currentTimeMillis()));
+								message.setAgentsPositions(informations.agentsPosition);
+								message.setClosedNodes(informations.getClosedNodes());
+								message.setKey(informations.getAgentKey());
+								message.setEdges(informations.getEdges());
+								message.setOpenNodes(informations.openNodes);
 								PacketManager.Send(this.myAgent, informations.bossName, message);
 
 							} else {
@@ -173,8 +186,14 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 									// en supprime des noeuds pour que d'autre agent ne tente pas d'y accéder
 									message.setNodes(nodesArounds);
 									message.setOldPosition(informations.myPosition);
-									informations.agentsPositions.put(myAgent.getLocalName(), new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
-									message.setAgentsPosition(informations.agentsPositions);
+									informations.addOrUpdateAgentPosition(myAgent.getLocalName(),
+											new Pair<String, Long>(informations.myPosition,
+													System.currentTimeMillis()));
+									message.setAgentsPosition(informations.agentsPosition);
+									message.setClosedNodes(informations.getClosedNodes());
+									message.setKey(informations.getAgentKey());
+									message.setEdges(informations.getEdges());
+									message.setOpenNodes(informations.openNodes);
 									PacketManager.Send(this.myAgent, entry.getKey(), message);
 									entry.setValue(new Pair<CoalitionState, Integer>(CoalitionState.Waiting, 0));
 								}
@@ -188,8 +207,9 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 								break;
 							}
 							nextNode = nodesArounds.get(tryMove);
+							
 							nextNode = informations.myMap.getNearestNode(informations.myPosition, nextNode,
-									new ArrayList<Pair<String,Long>>(informations.agentsPositions.values()));
+									new ArrayList<Pair<String, Long>>(informations.agentsPosition.values()));
 							isMoved = ((AbstractDedaleAgent) this.myAgent).moveTo(nextNode);
 						}
 
@@ -197,12 +217,50 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 
 					// l'agent est bloqué et ne peut pas bouger
 					if (tryMove >= nodesArounds.size()) {
+						nodesArounds.clear();
+						nodesArounds.add(nextNode);
+						if(blockedPositions != null) {
+							//blockedPositions.remove(informations.myPosition);
+							if(blockedPositions.size() > 0) {
+									
+								if(blockedPositions.contains(informations.myPosition) && blockedPositions.size() == 1) {
+									List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent)
+											.observe();
+									Iterator<Couple<String, List<Couple<Observation, Integer>>>> iter = lobs.iterator();
+									String nodeId = null;
+									isMoved = false;
+									while (iter.hasNext()) {
+										nodeId = iter.next().getLeft();
+										if(nodeId == informations.myPosition)
+											continue;
+										isMoved = ((AbstractDedaleAgent) this.myAgent).moveTo(nodeId);
+										if (isMoved) {
+											break;
+										}else {
+											blockedPositions.add(nodeId);
+										}
+									}
+									if(isMoved) {
+										blockedPositions.remove(informations.myPosition);
+										informations.myPosition = nodeId;
+										informations.addOrUpdateAgentPosition(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
+								}
+							}
+								
+								
+								
+								if(blockedPositions.size() > 0) {
+									nodesArounds.clear();
+									nodesArounds.add(blockedPositions.get(0));
+								}								
+							}
+						}
+						
 						// si le member n'est un chef d'aucun groupe en envoie un no move
 						if (informations.members.size() <= 0) {
-							
+
 							MemberMovedMessage message = new MemberMovedMessage();
-							informations.agentsPositions.put(myAgent.getLocalName(),new Pair<String,Long>(informations.myPosition,System.currentTimeMillis()));
-							message.setAgentsPositions(informations.agentsPositions);
+							message.setAgentsPositions(informations.agentsPosition);
 							PacketManager.Send(this.myAgent, informations.bossName, message);
 
 						} else {
@@ -211,7 +269,7 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 							for (String i : nodesArounds) {
 								for (Pair<String, CoalitionType> member : informations.coalitionInformations
 										.get(informations.coalitionId)) {
-									if (informations.agentsPositions.get(member.getKey()).getKey() == i) {
+									if (informations.agentsPosition.get(member.getKey()).getKey() == i) {
 										foundPosition = i;
 										break;
 									}
@@ -220,6 +278,10 @@ public class ExploCoalitionBehaviour extends OneShotBehaviour {
 								if (foundPosition != "")
 									break;
 
+							}
+							// refactor after
+							if (foundPosition == "") {
+								foundPosition = nodesArounds.get(0);
 							}
 
 							// si on trouve que quelqu'un est sur la position , on broadcast pour qu'il
