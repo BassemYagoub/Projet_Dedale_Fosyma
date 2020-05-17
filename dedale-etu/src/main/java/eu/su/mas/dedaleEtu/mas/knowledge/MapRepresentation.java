@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Edge;
@@ -150,7 +151,44 @@ public class MapRepresentation implements Serializable {
 	}
 
 	public String getNearestNode(String idFrom, String idTo, ArrayList<Pair<String, Long>> conditions) {
+		List<String> path = getShortestPath(idFrom, idTo);
+		path.remove(idFrom);
+		if (path.size() > 0) { // on a trouver un chemin possible
+			return path.get(0);
+		}else {
+			
+			if(informations.openNodes.size() > 0 ) {
+				
+				path = new ArrayList<String>();
+				for(Integer i = 0;i<informations.openNodes.size();i++) {
+					path = getShortestPath(idFrom, informations.openNodes.get(i));
+					path.remove(idFrom);
+					if(path.size() > 0 )
+						break;
 
+				}
+			}
+			
+			if(path.size()<= 0) {
+				path = new ArrayList<String>();
+				for(Integer i = 0;i<informations.getClosedNodes().size();i++) {
+					path = getShortestPath(idFrom, informations.getClosedNodes().get(i));
+					path.remove(idFrom);
+					if(path.size() > 0 )
+						break;
+
+				}
+			}
+			
+			return path.get(0);
+		}
+		
+		
+		
+		
+		
+		
+	/*	//System.out.println("entrer : "+informations.agentName);
 		List<String> path = getShortestPath(idFrom, idTo);
 		path.remove(idFrom);
 		
@@ -161,7 +199,8 @@ public class MapRepresentation implements Serializable {
 				path.remove(idFrom);
 
 			}
-			
+		//	System.out.println("sortis : "+informations.agentName);
+
 			return path.get(0);
 		} else {
 
@@ -202,17 +241,16 @@ public class MapRepresentation implements Serializable {
 				}
 			}
 
-			/*
-			 * // on vérifie si y'as un agent dessus for(Pair<String,Long> iterator :
-			 * conditions) { if(iterator.getKey() == path.get(0)) { state = true; break; } }
-			 */
 			if(!informations.nearNodes.contains(path.get(0))) {
 				path = getShortestPath(idFrom, path.get(0));
 				path.remove(idFrom);
 
 			}
-			return path.get(0);
-		}
+			
+		//	System.out.println("sortis : "+informations.agentName);
+
+			return path.get(0);*/
+		
 
 	}
 

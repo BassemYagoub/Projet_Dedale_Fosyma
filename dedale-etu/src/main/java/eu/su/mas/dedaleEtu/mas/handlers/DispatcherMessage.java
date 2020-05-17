@@ -44,6 +44,7 @@ public class DispatcherMessage extends OneShotBehaviour {
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(RequestJoinCoalitionMessage.class.getSimpleName()));
 		//conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(MemberMovedMessage.class.getSimpleName()));
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(CanMoveNearMessage.class.getSimpleName()));
+		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(CanMoveMessage.class.getSimpleName()));	
 		conditions = MessageTemplate.or(conditions, MessageTemplate.MatchProtocol(SynchronizeGroupMessage.class.getSimpleName()));
 
 		// messages à traiter plus tard
@@ -54,8 +55,10 @@ public class DispatcherMessage extends OneShotBehaviour {
 		ACLMessage object = myAgent.blockingReceive(conditions, AgentInformations.DefaultTimeOut);
 		
 		if (object != null) {
+			//System.out.println(object.getProtocol());
 			if(object.getProtocol() == BossMovedMessage.class.getSimpleName() 
-					|| object.getProtocol() == MemberMovedMessage.class.getSimpleName()) {
+					|| object.getProtocol() == MemberMovedMessage.class.getSimpleName() 
+					|| object.getProtocol() == SynchronizeMessage.class.getSimpleName()) {
 
 				informations.messages.add(object);
 				informations.state = AgentState.Dispatcher;
@@ -79,10 +82,10 @@ public class DispatcherMessage extends OneShotBehaviour {
 					}
 
 				}else {
-					
-					this.myAgent.putBack(object); // put first
+
 					try {
 						informations.state = AgentState.valueOf("Handler" + object.getProtocol());
+						this.myAgent.putBack(object); // put first
 					}catch(Exception e) {
 						informations.state = AgentState.Dispatcher;
 					}

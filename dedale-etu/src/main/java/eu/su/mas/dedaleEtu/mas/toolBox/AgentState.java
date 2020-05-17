@@ -17,6 +17,7 @@ public enum AgentState {
 	HandlerConversationFinishedMessage,
 	HandlerRequestJoinCoalitionMessage,
 	HandlerCanMoveNearMessage,
+	HandlerCanMoveMessage,
 	HandlerSynchronizeGroupMessage,
 	Coalition,
 	Blocking,

@@ -3,6 +3,7 @@ package eu.su.mas.dedaleEtu.mas.behaviours;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
@@ -35,19 +36,23 @@ public class ExploDispatchBehaviour extends OneShotBehaviour {
 		// System.out.println("agent : "+myAgent.getLocalName() + " nbr :
 		// "+this.informations.getClosedNodes().size());
 		informations.myPosition = ((AbstractDedaleAgent) this.myAgent).getCurrentPosition();
-		Boolean isHunter = false;
+		informations.isStench = false;
 		if (informations.myPosition != null) {
 			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent)
 					.observe();// myPosition
 			for (Couple<String, List<Couple<Observation, Integer>>> m : lobs) {
 				// System.out.println(m.getRight().toString());
 				if (m.getRight().toString().toLowerCase().contains("stench")) {
-					isHunter = true;
-					break;
+				//	informations.addOrUpdateAgentPosition("Wamp", position);
+					if(m.getLeft().equals(informations.myPosition)) {
+						informations.isStench = true;	
+						break;
+					}
+						
 				}
 			}
 			try {
-				// this.myAgent.doWait(500);
+				// this.myAgent.doWait(5000);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -92,7 +97,10 @@ public class ExploDispatchBehaviour extends OneShotBehaviour {
 				// on a parcouru toute la carte
 				if(informations.openNodes.size() <= 0) {
 					
-					informations.nodes = (ArrayList<String>)informations.nearNodes.clone();
+					//informations.nodes = (ArrayList<String>)informations.nearNodes.clone();
+					int index = ThreadLocalRandom.current().nextInt(0, informations.getClosedNodes().size());
+					informations.nodes.clear();
+					informations.nodes.add(informations.getClosedNodes().get(index));
 
 				}else {
 					for(int i = 0;i<informations.openNodes.size();i++) {
@@ -108,6 +116,17 @@ public class ExploDispatchBehaviour extends OneShotBehaviour {
 				}
 			}
 
+			if(informations.isStench) {
+				informations.nodes.clear();
+				for (Couple<String, List<Couple<Observation, Integer>>> m : lobs) {
+					// System.out.println(m.getRight().toString());
+					if (m.getRight().toString().toLowerCase().contains("stench")) {
+					//	informations.addOrUpdateAgentPosition("Wamp", position);
+						informations.nodes.add(m.getLeft());
+					}
+				}
+			}
+			
 			// appartient pas à une coalition
 			if (informations.coalitionId == -1) {
 				informations.state = AgentState.Exploring;

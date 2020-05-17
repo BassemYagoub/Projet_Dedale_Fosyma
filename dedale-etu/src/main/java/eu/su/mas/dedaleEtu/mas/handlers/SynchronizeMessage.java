@@ -41,7 +41,12 @@ public class SynchronizeMessage extends OneShotBehaviour{
 			informations.state = AgentState.Dispatcher;
 
 		}else {
-			informations.state = AgentState.Coalition;
+			
+			if(informations.currentConversation != null) {
+					informations.state = AgentState.Coalition;		
+			}
+			else
+				informations.state = AgentState.Dispatcher;
 
 		}
 		

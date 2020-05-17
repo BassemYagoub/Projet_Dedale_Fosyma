@@ -182,6 +182,7 @@ public class Principal {
 
 		pContainer = new ProfileImpl(host,port, platformID);
 		pContainer.setParameter(Profile.CONTAINER_NAME,containerName);
+
 		containerRef = rti.createAgentContainer(pContainer); 
 
 		//ContainerID cID= new ContainerID();
@@ -463,8 +464,8 @@ public class Principal {
 		Object [] entityParametersExplo4={"aaa"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		//ag=createNewDedaleAgent(c, agentName, eu.su.mas.dedaleEtu.mas.agents.dummies.dummies.DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
-		//agentList.add(ag);	
+		ag=createNewDedaleAgent(c, agentName, eu.su.mas.dedaleEtu.mas.agents.dummies.dummies.DummyMovingAgent.class.getName(), entityParametersExplo4);//ExploreSoloAgent
+		agentList.add(ag);	
 		
 		/*********
 		 * GOLEM

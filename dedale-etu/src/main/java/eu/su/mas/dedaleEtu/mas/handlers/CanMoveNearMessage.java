@@ -30,6 +30,7 @@ public class CanMoveNearMessage extends OneShotBehaviour {
 		Pair<eu.su.mas.dedaleEtu.mas.protocol.CanMoveNearMessage, ACLMessage> object = PacketManager
 				.ReceiveByClassName(this.getClass().getSimpleName(), myAgent);
 
+		//informations.numberReceiveBossMessage = 0;
 		// si c'est l'agent avec la position que on doit bouger alors on bouge
 		if (object.getKey().getPosition().equals(this.informations.myPosition)) {
 			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent)
@@ -58,10 +59,14 @@ public class CanMoveNearMessage extends OneShotBehaviour {
 				if(myAgent.getLocalName() == informations.bossName)
 					return;
 				MemberMovedMessage message = new MemberMovedMessage();
-				message.setClosedNodes(informations.getClosedNodes());
 				message.setKey(informations.getAgentKey());
-				message.setEdges(informations.getEdges());
-				message.setOpenNodes(informations.openNodes);
+
+				if(!informations.isSameKey(informations.getAgentKey(), informations.getAgentKey())) {
+					/*message.setClosedNodes(informations.getClosedNodes());
+					message.setEdges(informations.getEdges());
+					message.setOpenNodes(informations.openNodes);*/
+				}
+				
 				message.setAgentsPositions(informations.agentsPosition);
 				PacketManager.Send(this.myAgent, informations.bossName, message);
 			}else {

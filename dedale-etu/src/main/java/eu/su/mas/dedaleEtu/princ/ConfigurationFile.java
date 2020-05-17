@@ -57,9 +57,9 @@ public final class ConfigurationFile {
 	/**
 	 * Not null when the environment is loaded; should be null if the environment is generated or already online
 	 */
-	public static String INSTANCE_TOPOLOGY= null;
+	//public static String INSTANCE_TOPOLOGY= null;
 
-	//public static String INSTANCE_TOPOLOGY="resources/topology/map2020-topologyExam1-tree";
+	public static String INSTANCE_TOPOLOGY="resources/topology/map2020-topologyExam1-tree";
 	//public static String INSTANCE_TOPOLOGY="resources/topology/BinaryTree1";
 	//public static String INSTANCE_TOPOLOGY="resources/topology/map2018-topology-ica";
 	//public static String INSTANCE_TOPOLOGY="resources/interlocking/mapInterlocking2-topology";
@@ -72,8 +72,8 @@ public final class ConfigurationFile {
 	/**
 	 * Not null when the environment is loaded; should be null if the environment is generated or already online
 	 */
-	// public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/emptyMap";
-	public static String INSTANCE_CONFIGURATION_ELEMENTS=null;
+	 public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/emptyMap";
+	//public static String INSTANCE_CONFIGURATION_ELEMENTS=null;
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/distributedExploration/emptyMap";
 	 //public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/treasureHunt/map2018-elements-ica";
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/interlocking/mapInterlocking2-elements";
@@ -86,9 +86,9 @@ public final class ConfigurationFile {
 	/**
 	 * Must'nt be null as it describes the agents capabilities on the map
 	 */
-	// public static String INSTANCE_CONFIGURATION_ENTITIES="resources/map2020-entitiesTree";
+	 public static String INSTANCE_CONFIGURATION_ENTITIES="resources/map2020-entitiesTree";
 	//public static String INSTANCE_CONFIGURATION_ENTITIES="resources/agentExplo";
-	public static String INSTANCE_CONFIGURATION_ENTITIES="resources/multiAgentExplo";
+	//public static String INSTANCE_CONFIGURATION_ENTITIES="resources/multiAgentExplo";
 	//public static String INSTANCE_CONFIGURATION_ENTITIES="resources/map2018-entities2";
 	//public static String INSTANCE_CONFIGURATION_ENTITIES="resources/map2019-entitiesExam1";
 	//public static String INSTANCE_CONFIGURATION_ENTITIES="resources/monoAgent-entities";
@@ -106,7 +106,7 @@ public final class ConfigurationFile {
 	/**
 	 * Parameter used to generate the environment 
 	 */
-	public static Integer ENVIRONMENT_SIZE=1;
+	public static Integer ENVIRONMENT_SIZE=10;
 	
 	/**
 	 * Parameter used to perceive the wumpus trough its smell

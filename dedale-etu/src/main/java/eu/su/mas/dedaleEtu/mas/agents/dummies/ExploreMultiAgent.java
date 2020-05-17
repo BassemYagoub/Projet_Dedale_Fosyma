@@ -16,6 +16,7 @@ import eu.su.mas.dedaleEtu.mas.behaviours.SayHello;
 import eu.su.mas.dedaleEtu.mas.behaviours.SendingEndConversationBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.SendingPingMessageBehaviour;
 import eu.su.mas.dedaleEtu.mas.handlers.AcceptCoalitionMessage;
+import eu.su.mas.dedaleEtu.mas.handlers.CanMoveMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.CanMoveNearMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.CoalitionInvitationMessage;
 import eu.su.mas.dedaleEtu.mas.handlers.ConversationFinishedMessage;
@@ -88,6 +89,8 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		exploration.registerState(new ConversationFinishedMessage(this,informations), "HandlerConversationFinishedMessage");
 		exploration.registerState(new RequestJoinCoalitionMessage(this,informations), "HandlerRequestJoinCoalitionMessage");
 		exploration.registerState(new CanMoveNearMessage(this,informations), "HandlerCanMoveNearMessage");
+		exploration.registerState(new CanMoveMessage(this,informations), "HandlerCanMoveMessage");
+
 		exploration.registerState(new SynchronizeGroupMessage(this,informations), "HandlerSynchronizeGroupMessage");
 
 		
@@ -115,6 +118,7 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		
 		exploration.registerTransition("Dispatcher","HandlerSynchronizeGroupMessage",AgentState.HandlerSynchronizeGroupMessage.ordinal()); 
 		exploration.registerTransition("Dispatcher","HandlerCanMoveNearMessage",AgentState.HandlerCanMoveNearMessage.ordinal()); 
+		exploration.registerTransition("Dispatcher","HandlerCanMoveMessage",AgentState.HandlerCanMoveMessage.ordinal()); 
 
 		exploration.registerTransition("HandlerPingMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerPongMessage","Redirect",AgentState.Redirect.ordinal()); 		
@@ -125,7 +129,8 @@ public class ExploreMultiAgent extends AbstractDedaleAgent {
 		exploration.registerTransition("HandlerCoalitionInvitationMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerConversationFinishedMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerRequestJoinCoalitionMessage","Redirect",AgentState.Redirect.ordinal()); 		
-		exploration.registerTransition("HandlerCanMoveNearMessage","Redirect",AgentState.Redirect.ordinal()); 		
+		exploration.registerTransition("HandlerCanMoveNearMessage","Redirect",AgentState.Redirect.ordinal()); 	
+		exploration.registerTransition("HandlerCanMoveMessage","Redirect",AgentState.Redirect.ordinal()); 		
 		exploration.registerTransition("HandlerSynchronizeGroupMessage","Redirect",AgentState.Redirect.ordinal()); 		
 
 		
